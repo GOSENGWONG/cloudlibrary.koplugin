@@ -10,9 +10,8 @@ local utils = require("utils")
 local M = {}
 
 local CLOUD_LOG_FILENAME = "cloudlibrary_global_log.txt"
-local LOCAL_LOG_PATH = DataStorage:getDataDir() .. "同步记录.txt"
+local LOCAL_LOG_PATH = DataStorage:getDataDir() .. "/同步记录.txt"
 
--- 延迟执行相关
 local pending_sync = false
 local sync_timer = nil
 
@@ -181,7 +180,6 @@ local function get_record_key(record)
     return record:sub(1, 100)
 end
 
--- 实际的同步逻辑
 function M.doSync(silent)
     if not NetworkMgr:isOnline() then
         if not silent then
@@ -264,15 +262,12 @@ function M.doSync(silent)
                 text = result_msg,
                 timeout = 2
             })
-        else
-            logger.info("CloudLibrary: " .. result_msg)
         end
     end)
     
     return true
 end
 
--- 入口函数：延迟执行，不阻塞主流程
 function M.sync_log(silent)
     pending_sync = true
     
@@ -294,9 +289,6 @@ function M.sync_log(silent)
     return true
 end
 
--- 在 sync_log.lua 末尾添加
-
--- 清空云端同步记录
 function M.clear_cloud_log()
     local server = get_server()
     if not server then
@@ -313,13 +305,12 @@ function M.clear_cloud_log()
         return false, "无法获取云端路径"
     end
     
-    -- 上传一个空文件覆盖云端记录
     local temp_file = DataStorage:getDataDir() .. "cloud_log_empty.tmp"
     local f = io.open(temp_file, "w")
     if not f then
         return false, "无法创建临时文件"
     end
-    f:write("")  -- 空内容
+    f:write("")
     f:close()
     
     local code
