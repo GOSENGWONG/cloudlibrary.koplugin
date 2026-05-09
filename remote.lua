@@ -12,7 +12,7 @@ local logger = require("logger")
 local Event = require("ui/event")
 local M = {}
 
-local DOWNLOAD_DIR = DataStorage:getDataDir() .. "metadatasync/"
+local DOWNLOAD_DIR = DataStorage:getDataDir() .. "/metadatasync/"
 
 local ERROR_TYPES = {
     NO_NETWORK = "no_network",
@@ -421,7 +421,7 @@ function M.upload_dual_format(server, lua_path, lua_filename, book)
     local json_success = M.upload_json_to_cloud(server, json_tmp_path, lua_filename)
     
     if json_success and book and book.title then
-        local log_path = DataStorage:getDataDir() .. "同步记录.txt"
+        local log_path = DataStorage:getDataDir() .. "/同步记录.txt"
         local f = io.open(log_path, "a")
         if f then
             local timestamp = os.date("%Y-%m-%d %H:%M:%S")
