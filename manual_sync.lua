@@ -38,6 +38,35 @@ function ManualSync:syncCurrentBook(is_upload)
         return
     end
     
+    -- 👇 检查1：网络连接
+    local NetworkMgr = require("ui/network/manager")
+    if not NetworkMgr:isOnline() then
+        self:showMsg(_("网络未连接，无法同步"))
+        return
+    end
+
+    -- 👇 检查2：服务器配置
+    local remote = require("remote")
+    local server = remote.get_server()
+    if not server then
+        self:showMsg(_("未配置云存储服务，请先在设置中配置"))
+        return
+    end
+
+    -- 👇 检查3：云端目录
+    if not server.url or server.url == "" then
+        self:showMsg(_("未设置云端目录，请先在云端目录中配置"))
+        return
+    end
+
+    -- 👇 检查4：云服务类型
+    local api = remote.get_api(server)
+    if not api then
+        self:showMsg(_("不支持的云服务类型，请使用 WebDAV 或 Dropbox"))
+        return
+    end
+    -- 👆
+
     if is_upload then
         self:doSyncCurrentBook(is_upload, file, metadata_file)
     else
@@ -69,6 +98,35 @@ function ManualSync:syncCurrentBookMerge()
         return
     end
     
+    -- 👇 检查1：网络连接
+    local NetworkMgr = require("ui/network/manager")
+    if not NetworkMgr:isOnline() then
+        self:showMsg(_("网络未连接，无法同步"))
+        return
+    end
+
+    -- 👇 检查2：服务器配置
+    local remote = require("remote")
+    local server = remote.get_server()
+    if not server then
+        self:showMsg(_("未配置云存储服务，请先在设置中配置"))
+        return
+    end
+
+    -- 👇 检查3：云端目录
+    if not server.url or server.url == "" then
+        self:showMsg(_("未设置云端目录，请先在云端目录中配置"))
+        return
+    end
+
+    -- 👇 检查4：云服务类型
+    local api = remote.get_api(server)
+    if not api then
+        self:showMsg(_("不支持的云服务类型，请使用 WebDAV 或 Dropbox"))
+        return
+    end
+    -- 👆
+
     self.plugin.ui:saveSettings()
     
     UIManager:show(ConfirmBox:new{
@@ -196,9 +254,37 @@ function ManualSync:doSyncCurrentBookMerge(file, metadata_file)
 end
 
 function ManualSync:batchSyncWithFMSelection(is_upload, is_merge)
+    -- 👇 检查1：网络连接
+    local NetworkMgr = require("ui/network/manager")
+    if not NetworkMgr:isOnline() then
+        self:showMsg(_("网络未连接，无法同步"))
+        return
+    end
+
+    -- 👇 检查2：服务器配置
+    local remote = require("remote")
+    local server = remote.get_server()
+    if not server then
+        self:showMsg(_("未配置云存储服务，请先在设置中配置"))
+        return
+    end
+
+    -- 👇 检查3：云端目录
+    if not server.url or server.url == "" then
+        self:showMsg(_("未设置云端目录，请先在云端目录中配置"))
+        return
+    end
+
+    -- 👇 检查4：云服务类型
+    local api = remote.get_api(server)
+    if not api then
+        self:showMsg(_("不支持的云服务类型，请使用 WebDAV 或 Dropbox"))
+        return
+    end
+    -- 👆
+
     local ui = self.plugin.ui
     
-    -- 根据操作类型生成提示文字
     local action_text = ""
     local button_text = ""
     if is_upload then
@@ -213,7 +299,6 @@ function ManualSync:batchSyncWithFMSelection(is_upload, is_merge)
         end
     end
     
-    -- 如果没有文件管理器界面，先进入
     if not ui or not ui.file_chooser then
         local FileManager = require("apps/filemanager/filemanager")
         
@@ -239,7 +324,6 @@ function ManualSync:batchSyncWithFMSelection(is_upload, is_merge)
         return
     end
     
-    -- 已经在文件管理器界面
     local FileManager = require("apps/filemanager/filemanager")
     local fm = FileManager.instance
     
@@ -248,9 +332,7 @@ function ManualSync:batchSyncWithFMSelection(is_upload, is_merge)
         return
     end
     
-    -- 检查是否在选择模式：selected_files 不为 nil 表示已在选择模式
     if fm.selected_files == nil then
-        -- 不在选择模式，进入选择模式
         fm:onToggleSelectMode(true)
         UIManager:show(Notification:new{
             text = string.format(_("请勾选要%s的书籍，再点击「%s」"), action_text, button_text),
@@ -259,10 +341,8 @@ function ManualSync:batchSyncWithFMSelection(is_upload, is_merge)
         return
     end
     
-    -- 已在选择模式，获取选中的文件
     local selected_files = fm.selected_files
     if not selected_files or next(selected_files) == nil then
-        -- 在选择模式但没有选中任何文件
         UIManager:show(Notification:new{
             text = string.format(_("请勾选要%s的书籍，再点击「%s」"), action_text, button_text),
             timeout = 5
@@ -270,28 +350,17 @@ function ManualSync:batchSyncWithFMSelection(is_upload, is_merge)
         return
     end
     
-    -- 有选中文件，直接执行同步
     self:processSelectedFiles(is_upload, is_merge, selected_files)
 end
 
 function ManualSync:processSelectedFiles(is_upload, is_merge, selected_files)
-    logger.info("========== processSelectedFiles 开始 ==========")
-    logger.info("is_upload = " .. tostring(is_upload))
-    logger.info("is_merge = " .. tostring(is_merge))
-    
     local DocSettings = require("docsettings")
     local ui = self.plugin.ui
     local books = {}
     
-    local file_count = 0
     for file, selected in pairs(selected_files) do
-        file_count = file_count + 1
-        logger.info("process: 处理文件 " .. file_count .. ": " .. tostring(file) .. ", selected = " .. tostring(selected))
-        
         if selected and lfs.attributes(file, "mode") == "file" then
-            logger.info("process: 文件有效，查找元数据")
             local metadata_file = DocSettings:findSidecarFile(file)
-            logger.info("process: metadata_file = " .. tostring(metadata_file))
             
             local props = {}
             if ui and ui.bookinfo then
@@ -304,9 +373,6 @@ function ManualSync:processSelectedFiles(is_upload, is_merge, selected_files)
                 author = author[1]
             end
             
-            logger.info("process: title = " .. tostring(title))
-            logger.info("process: basename = " .. tostring(basename))
-            
             table.insert(books, {
                 file = file,
                 metadata = metadata_file,
@@ -314,15 +380,10 @@ function ManualSync:processSelectedFiles(is_upload, is_merge, selected_files)
                 book_basename = basename,
                 author = author,
             })
-        else
-            logger.info("process: 文件无效或未选中，跳过")
         end
     end
     
-    logger.info("process: 共处理 " .. file_count .. " 个文件，有效书籍 " .. #books .. " 本")
-    
     if #books == 0 then
-        logger.info("process: 没有有效书籍，显示提示")
         self:showMsg(_("没有选中任何文件"))
         return
     end
@@ -334,19 +395,15 @@ function ManualSync:processSelectedFiles(is_upload, is_merge, selected_files)
         action_text = is_merge and "下载-合并更新" or "下载-覆盖更新"
     end
     
-    logger.info("process: 显示确认框，将" .. action_text .. " " .. #books .. " 本书籍")
     UIManager:show(ConfirmBox:new{
         text = string.format("将%s %d 本书籍的元数据", action_text, #books),
         ok_text = _("继续"),
         cancel_text = _("取消"),
         ok_callback = function()
-            logger.info("process: 用户确认，调用 doBatchSync")
             self:doBatchSync(is_upload, is_merge, books)
         end
     })
-    logger.info("========== processSelectedFiles 结束 ==========")
 end
-
 
 function ManualSync:doBatchSync(is_upload, is_merge, selected_books)
     local remote = require("remote")
