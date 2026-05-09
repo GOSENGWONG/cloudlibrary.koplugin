@@ -47,33 +47,35 @@ Used for quickly switching between Overwrite/Merge modes (does not affect the au
 - If a file with the same name already exists locally during download, it will be skipped (details can be viewed in the sync log). If you really need to download it, please delete/rename the local file first.
 
 【Batch Synchronization Method】
-1. Long-press on a file in the file browser to enter selection mode.
-2. Check the books to synchronize.
-3. Select 「Menu」 → 「Tools」 → 「Cloud Library」 → 「Metadata Sync/Book Sync」
+1. **Manual operation**: In the file manager, enter selection mode → check the books to sync → tap 「Menu」→「Tools」→「Cloud Library」→「Metadata Sync/Book Sync」
+2. **Gesture shortcut operation**: After setting up a gesture shortcut, you can enter selection mode directly via gesture, check the books, then execute upload/download again via gesture
 
-【Automatic Sync Settings (Metadata Only)】 – Only for the currently open single book
-1. Disabled by default. Check the specific options below to enable the corresponding mode automatically.
-2. **Auto Upload Backup**: Automatically upload metadata to overwrite the cloud when editing annotations, closing a book, or when the device goes to sleep. (You can enable multiple triggers simultaneously, but not recommended. It is recommended to choose either closing the book or device sleep for auto backup.)
-3. **Auto Download Update**: Automatically download metadata from the cloud to update locally when opening a book (Overwrite/Merge modes).
-
+【Automatic Sync Settings (Metadata Only)】 
+*Only applies to the currently open book*
+1. Disabled by default. Check the specific options below to enable the corresponding mode.
+2. **Auto upload backup**: Automatically upload metadata to overwrite the cloud when editing annotations, closing a book, or when the device goes to sleep. (Multiple triggers can be enabled at the same time, but not recommended. It is advisable to choose either closing the book or device sleep for auto backup.)
+3. **Auto download update**: Automatically download metadata from the cloud to update locally when opening a book (overwrite/merge modes available)
 - **Notes:**
-  - Enabling auto upload will cause the cloud metadata file to be completely overwritten by the current device's metadata file. Please use with caution.
-  - Enabling auto download will cause the current device's metadata file to be completely overwritten or merged by the cloud metadata file. Please use with caution.
-  - When enabling auto sync, to prevent accidental overwriting of data from different devices, it is recommended to choose **Merge Update Mode**.
+  - Auto sync only syncs the metadata of the book at the triggered moment, not all books continuously.  
+  Example: If 「Auto upload on close」 is enabled, no matter which book or where it is located, whenever a book is closed, the device will automatically upload that book's metadata, overwriting the same-named metadata file in the cloud directory.
+  - When using this plugin for the first time, please **manually batch upload** the local metadata from your current device to the cloud before enabling auto sync.
+  - To prevent accidental data overwrites between different devices when auto sync is enabled, it is recommended to choose **Merge Update** mode.
+  - Make sure your device is connected to the internet, otherwise auto sync will not work.
 
 【Additional JSON Backup】
 When enabled, an additional JSON file converted from the original metadata file will be uploaded alongside the original metadata file. The JSON format is not a standard file for KOReader book metadata synchronization across different devices, but is intended for users who need to further organize their KOReader annotations. Enable as needed.
 
 【Sync Log】
 1. A sync log is generated for each sync operation, which can be used to troubleshoot sync failures.
-2. Enable 「Record Cloud Sync」, and sync logs will be automatically synchronized with the cloud, allowing you to view sync logs from different devices.
+2. Enable 「Record Cloud Sync」, and sync logs will be automatically synchronized with the cloud, allowing you to view sync logs from different devices. (To minimize performance impact, please enable it only when needed.)
 3. You can clear local and cloud sync logs via the "Clear" button in the sync log and 「Menu」 → 「Tools」 → 「Cloud Library」 → 「Settings」 → Clear Cloud Sync Log respectively.
 
 **Note:** Because this plugin directly operates on the device's original metadata files, if there is no local metadata file (e.g., a book that has never been opened, or a newly opened book that hasn't generated a metadata file yet), the sync will fail with an error indicating that the local metadata file was not found. In this case, simply reopen the book and then perform the sync operation.
 
 【Gesture Shortcuts】
 - Enter 「Settings」 → 「Gestures」 → 「Gesture Manager」 from the reading interface and file browser interface respectively. Select a gesture and check the corresponding Cloud Library menu items in the Reader and File Manager.
-- Combined with the Metadata Download Mode setting, you can achieve one-gesture download/batch download (smart mode).
+- Combined with the Metadata Download Mode setting, you can achieve one-gesture download / batch download (smart mode).
+- **Worry-Free Sync Mode**: One gesture to enable/disable automatic metadata sync (auto upload backup when closing a book / device sleeping; auto download and merge update when opening a book).
 
 #### Update Notes
 cloudlibrary (renamed) adds new features and fixes bugs based on the v0.22 version of MetedataSync (previous name) from Xiaohongshu:
@@ -92,7 +94,10 @@ cloudlibrary (renamed) adds new features and fixes bugs based on the v0.22 versi
 12. Fixed online update crash issue on Android (v1.1)
 13. Fixed the issue where synchronization failed when opening a book for the first time (v1.2)
 14. Added support for setting an independent cloud directory for books (separate from metadata cloud directory) (v1.2)
-
+15. Added pre-flight checks for network and configuration (v1.3)
+16. Added Worry-Free Sync Mode quick toggle for metadata (v1.3)
+17. Fixed path concatenation issues for sync logs, metadata and temporary folders (v1.3)
+18. Removed debug logs (v1.3)
 
 #### Contributing
 
@@ -101,11 +106,7 @@ cloudlibrary (renamed) adds new features and fixes bugs based on the v0.22 versi
 3.  Commit your code
 4.  Create a new Pull Request
 
-#### Highlights
+#### Project Repository
 
-1.  Use `Readme_XXX.md` to support different languages, e.g., Readme_en.md, Readme_zh.md
-2.  Gitee official blog [blog.gitee.com](https://blog.gitee.com)
-3.  You can visit [https://gitee.com/explore](https://gitee.com/explore) to learn about excellent open-source projects on Gitee
-4.  [GVP](https://gitee.com/gvp) stands for Gitee Most Valuable Open Source Project, which are outstanding open-source projects comprehensively evaluated
-5.  Gitee official user manual [https://gitee.com/help](https://gitee.com/help)
-6.  Gitee Cover Character is a column showcasing Gitee member风采 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+- Gitee : https://gitee.com/gytwo/cloudlibrary.koplugin
+- GitHub: https://github.com/gytwo/cloudlibrary.koplugin
