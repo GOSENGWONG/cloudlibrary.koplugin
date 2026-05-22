@@ -2,6 +2,7 @@ local logger = require("logger")
 local UIManager = require("ui/uimanager")
 local Notification = require("ui/widget/notification")
 local lfs = require("libs/libkoreader-lfs")
+local _ = require("gettext")
 
 local Hooks = {}
 
@@ -119,7 +120,7 @@ function Hooks:hookOnReaderReady()
                     -- 👇 前置检查1：网络连接
                     local NetworkMgr = require("ui/network/manager")
                     if not NetworkMgr:isOnline() then
-                        self_auto_sync:showNotification(title, "自动更新失败 (网络未连接)", nil, false)
+                        self_auto_sync:showNotification(title, _("Auto update failed (Network disconnected)"), nil, false)
                         local result = original(...)
                         local ui_instance = ReaderUI.instance
                         if ui_instance and not ui_instance.CloudLibrary and self_plugin then
@@ -132,7 +133,7 @@ function Hooks:hookOnReaderReady()
                     local remote = require("remote")
                     local server = remote.get_server()
                     if not server then
-                        self_auto_sync:showNotification(title, "自动更新失败 (未配置云存储)", nil, false)
+                        self_auto_sync:showNotification(title, _("Auto update failed (Cloud storage not configured)"), nil, false)
                         local result = original(...)
                         local ui_instance = ReaderUI.instance
                         if ui_instance and not ui_instance.CloudLibrary and self_plugin then
@@ -143,7 +144,7 @@ function Hooks:hookOnReaderReady()
     
                     -- 👇 前置检查3：云端目录
                     if not server.url or server.url == "" then
-                        self_auto_sync:showNotification(title, "自动更新失败 (未设置云端目录)", nil, false)
+                        self_auto_sync:showNotification(title, _("Auto update failed (Cloud directory not set)"), nil, false)
                         local result = original(...)
                         local ui_instance = ReaderUI.instance
                         if ui_instance and not ui_instance.CloudLibrary and self_plugin then
@@ -155,7 +156,7 @@ function Hooks:hookOnReaderReady()
                     -- 👇 前置检查4：云服务类型
                     local api = remote.get_api(server)
                     if not api then
-                        self_auto_sync:showNotification(title, "自动更新失败 (不支持的云服务)", nil, false)
+                        self_auto_sync:showNotification(title, _("Auto update failed (Unsupported cloud service)"), nil, false)
                         local result = original(...)
                         local ui_instance = ReaderUI.instance
                         if ui_instance and not ui_instance.CloudLibrary and self_plugin then
@@ -181,27 +182,27 @@ function Hooks:hookOnReaderReady()
                     author = author,
                 }
                 
-                local success, error_type
-                local download_mode = self_auto_sync.settings.auto_download_mode
-                local mode_desc = (download_mode == "merge") and "合并更新" or "覆盖更新"
-                local naming_mode = self_auto_sync.settings.metadata_naming_mode or "metadata"
-                
-                if download_mode == "merge" then
-                    success, error_type = remote.download_book_merge_before_open(book, naming_mode)
-                else
-                    success, error_type = remote.download_book_before_open(book, naming_mode)
-                end
-                
-                if success then
-                    self_auto_sync:updateLastSync(string.format("元数据同步-自动同步(打开书籍)-下载成功(%s)", mode_desc))
-                    self_auto_sync:writeLog(book, "打开书籍", false, true, nil, mode_desc)
-                    self_auto_sync:showNotification(title, "自动更新成功", mode_desc, true)
-                else
-                    local error_info = remote.get_error_message(error_type, false, naming_mode)
-                    self_auto_sync:writeLog(book, "打开书籍", false, false, error_info.reason, nil, error_info.solution)
-                    local fail_msg = string.format("自动更新失败 (%s)", error_info.reason)
-                    self_auto_sync:showNotification(title, fail_msg, mode_desc, false)
-                end
+            local success, error_type
+            local download_mode =                       self_auto_sync.settings.auto_download_mode
+            local mode_desc_for_show = (download_mode == "merge") and _("Merge") or _("Overwrite")
+            local naming_mode =             self_auto_sync.settings.metadata_naming_mode or "metadata"
+
+            if download_mode == "merge" then
+                success, error_type = remote.download_book_merge_before_open(book, naming_mode)
+            else
+                success, error_type = remote.download_book_before_open(book, naming_mode)
+            end
+
+            if success then
+                self_auto_sync:updateLastSync(string.format(_("Metadata sync") .. "-" .. _("Auto sync") .. "(" .. _("Open book") .. ")-" .. _("Download successful") .. "(%s)", mode_desc_for_show))
+                self_auto_sync:writeLog(book, _("Open book"), false, true, nil, download_mode) 
+                self_auto_sync:showNotification(title, _("Auto update successful"), mode_desc_for_show, true)
+            else
+                local error_info = remote.get_error_message(error_type, false, naming_mode)
+                self_auto_sync:writeLog(book, _("Open book"), false, false, error_info.reason, nil, error_info.solution)
+                local fail_msg = string.format(_("Auto update failed (%s)"), error_info.reason)
+                self_auto_sync:showNotification(title, fail_msg, mode_desc_for_show, false)
+               end
             end
         end
         
