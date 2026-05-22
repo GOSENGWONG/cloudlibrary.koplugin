@@ -51,46 +51,41 @@ function AutoSync:sync(document, is_upload, source)
         return 
     end
     
-    -- 👇 检查1：网络连接
     local NetworkMgr = require("ui/network/manager")
     if not NetworkMgr:isOnline() then
         if self.settings.auto_sync_notify then
-            local book_title = document.title or (document.file and document.file:match("([^/]+)$"):gsub("%.[^%.]+$", "")) or "书籍"
-            self:showNotification(book_title, "同步失败(网络未连接)", nil, false)
+            local book_title = document.title or (document.file and document.file:match("([^/]+)$"):gsub("%.[^%.]+$", "")) or "book"
+            self:showNotification(book_title, _("Auto sync failed (Network disconnected)"), nil, false)
         end
         return
     end
     
-    -- 👇 检查2：服务器配置
     local remote = require("remote")
     local server = remote.get_server()
     if not server then
         if self.settings.auto_sync_notify then
-            local book_title = document.title or (document.file and document.file:match("([^/]+)$"):gsub("%.[^%.]+$", "")) or "书籍"
-            self:showNotification(book_title, "同步失败(未配置云存储)", nil, false)
+            local book_title = document.title or (document.file and document.file:match("([^/]+)$"):gsub("%.[^%.]+$", "")) or "book"
+            self:showNotification(book_title, _("Auto sync failed (Cloud storage not configured)"), nil, false)
         end
         return
     end
     
-    -- 👇 检查3：云端目录
     if not server.url or server.url == "" then
         if self.settings.auto_sync_notify then
-            local book_title = document.title or (document.file and document.file:match("([^/]+)$"):gsub("%.[^%.]+$", "")) or "书籍"
-            self:showNotification(book_title, "同步失败(未设置云端目录)", nil, false)
+            local book_title = document.title or (document.file and document.file:match("([^/]+)$"):gsub("%.[^%.]+$", "")) or "book"
+            self:showNotification(book_title, _("Auto sync failed (Cloud directory not set)"), nil, false)
         end
         return
     end
     
-    -- 👇 检查4：云服务类型
     local api = remote.get_api(server)
     if not api then
         if self.settings.auto_sync_notify then
-            local book_title = document.title or (document.file and document.file:match("([^/]+)$"):gsub("%.[^%.]+$", "")) or "书籍"
-            self:showNotification(book_title, "同步失败(不支持的云服务)", nil, false)
+            local book_title = document.title or (document.file and document.file:match("([^/]+)$"):gsub("%.[^%.]+$", "")) or "book"
+            self:showNotification(book_title, _("Auto sync failed (Unsupported cloud service)"), nil, false)
         end
         return
     end
-    -- 👆
 
     if is_upload and self.skip_auto_upload then
         return
@@ -121,13 +116,13 @@ function AutoSync:sync(document, is_upload, source)
     
     local source_desc = ""
     if source == "annotate" then
-        source_desc = "编辑标注"
+        source_desc = _("Edit annotation")
     elseif source == "close" then
-        source_desc = "关闭书籍"
+        source_desc = _("Close book")
     elseif source == "suspend" then
-        source_desc = "设备休眠"
+        source_desc = _("Device suspend")
     elseif source == "open" then
-        source_desc = "打开书籍"
+        source_desc = _("Open book")
     end
     
     local DocSettings = require("docsettings")
@@ -152,12 +147,12 @@ function AutoSync:sync(document, is_upload, source)
     
     if not metadata_file or not lfs.attributes(metadata_file, "mode") then
         local error_info = {
-            reason = "未找到本地元数据文件",
-            solution = "请先打开该书生成元数据文件"
+            reason = _("Local metadata file not found"),
+            solution = _("Please open the book first to generate metadata file")
         }
         self:writeLog(book, source_desc, is_upload, false, error_info.reason, nil, error_info.solution)
-        self:updateLastSync("自动同步(" .. source_desc .. ")-失败")
-        self:showNotification(book.title, "同步失败", nil, false)
+        self:updateLastSync(_("Auto sync") .. "(" .. source_desc .. ")-" .. _("Failed"))
+        self:showNotification(book.title, _("Sync failed"), nil, false)
         return
     end
     
@@ -173,17 +168,17 @@ function AutoSync:sync(document, is_upload, source)
             
             if success then
                 self:writeLog(book, source_desc, true, true)
-                self:updateLastSync("元数据同步-自动同步(" .. source_desc .. ")-上传成功")
-                self:showNotification(book.title, "自动备份成功", nil, true)
+                self:updateLastSync(_("Metadata sync") .. "-" .. _("Auto sync") .. "(" .. source_desc .. ")-" .. _("Upload successful"))
+                self:showNotification(book.title, _("Auto backup successful"), nil, true)
             else
                 local error_info = remote.get_error_message(error_type, true, naming_mode)
                 self:writeLog(book, source_desc, true, false, error_info.reason, nil, error_info.solution)
-                self:updateLastSync("元数据同步-自动同步(" .. source_desc .. ")-上传失败")
-                local fail_msg = string.format("自动备份失败 (%s)", error_info.reason)
+                self:updateLastSync(_("Metadata sync") .. "-" .. _("Auto sync") .. "(" .. source_desc .. ")-" .. _("Upload failed"))
+                local fail_msg = string.format(_("Auto backup failed (%s)"), error_info.reason)
                 self:showNotification(book.title, fail_msg, nil, false)
             end
         else
-            local mode_desc = (self.settings.auto_download_mode == "merge") and "合并更新" or "覆盖更新"
+            local mode_desc = (self.settings.auto_download_mode == "merge") and _("Merge") or _("Overwrite")
             
             if self.settings.auto_download_mode == "merge" then
                 success, error_type = remote.download_book_merge(book, naming_mode)
@@ -193,13 +188,13 @@ function AutoSync:sync(document, is_upload, source)
             
             if success then
                 self:writeLog(book, source_desc, false, true, nil, mode_desc)
-                self:updateLastSync("元数据同步-自动同步(" .. source_desc .. ")-下载成功(" .. mode_desc .. ")")
-                self:showNotification(book.title, "自动更新成功", mode_desc, true)
+                self:updateLastSync(_("Metadata sync") .. "-" .. _("Auto sync") .. "(" .. source_desc .. ")-" .. _("Download successful") .. "(" .. mode_desc .. ")")
+                self:showNotification(book.title, _("Auto update successful"), mode_desc, true)
             else
                 local error_info = remote.get_error_message(error_type, false, naming_mode)
                 self:writeLog(book, source_desc, false, false, error_info.reason, nil, error_info.solution)
-                self:updateLastSync("元数据同步-自动同步(" .. source_desc .. ")-下载失败")
-                local fail_msg = string.format("自动更新失败 (%s)", error_info.reason)
+                self:updateLastSync(_("Metadata sync") .. "-" .. _("Auto sync") .. "(" .. source_desc .. ")-" .. _("Download failed"))
+                local fail_msg = string.format(_("Auto update failed (%s)"), error_info.reason)
                 self:showNotification(book.title, fail_msg, mode_desc, false)
             end
         end
@@ -217,7 +212,6 @@ function AutoSync:showNotification(title, operation, mode, is_success)
     local display_title = title
     if title and #title > max_bytes then
         local truncated = title:sub(1, max_bytes)
-        -- 使用 KOReader 的 util 模块
         local util = require("util")
         display_title = util.fixUtf8(truncated, "") .. "..."
     end
@@ -250,27 +244,27 @@ function AutoSync:writeLog(book, source_desc, is_upload, success, error_reason, 
     
     local operation_type = ""
     if is_upload then
-        operation_type = string.format("元数据同步-自动同步-%s-上传", source_desc)
+        operation_type = string.format(_("Metadata sync") .. "-" .. _("Auto sync") .. "-%s-" .. _("Upload"), source_desc)
     else
-        local mode_desc = (download_mode == "merge") and "合并更新" or "覆盖更新"
-        operation_type = string.format("元数据同步-自动同步-%s-下载(%s)", source_desc, mode_desc)
+        local mode_desc = (download_mode == "merge") and _("Merge") or _("Overwrite")
+        operation_type = string.format(_("Metadata sync") .. "-" .. _("Auto sync") .. "-%s-" .. _("Download") .. "(%s)", source_desc, mode_desc)
     end
     
     local new_record = {}
     table.insert(new_record, utils.SEPARATOR_LINE)
-    table.insert(new_record, string.format("同步时间: %s", timestamp))
-    table.insert(new_record, string.format("操作设备: %s", device_name))
-    table.insert(new_record, string.format("设备ID: %s", device_id))
-    table.insert(new_record, string.format("操作类型: %s", operation_type))
+    table.insert(new_record, string.format(_("Sync time: %s"), timestamp))
+    table.insert(new_record, string.format(_("Device: %s"), device_name))
+    table.insert(new_record, string.format(_("Device ID: %s"), device_id))
+    table.insert(new_record, string.format(_("Operation type: %s"), operation_type))
     table.insert(new_record, utils.SEPARATOR_LINE)
     
     if success then
-        table.insert(new_record, string.format("【成功】✓ %s", book.title or book.book_basename))
+        table.insert(new_record, string.format(_("[Success] ✓ %s"), book.title or book.book_basename))
     else
-        table.insert(new_record, string.format("【失败】✗ %s", book.title or book.book_basename))
-        table.insert(new_record, string.format("原因: %s", error_reason or "未知错误"))
+        table.insert(new_record, string.format(_("[Failed] ✗ %s"), book.title or book.book_basename))
+        table.insert(new_record, string.format(_("Reason: %s"), error_reason or _("Unknown error")))
         if solution then
-            table.insert(new_record, string.format("解决方案: %s", solution))
+            table.insert(new_record, string.format(_("Solution: %s"), solution))
         end
     end
     table.insert(new_record, "")
