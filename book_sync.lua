@@ -1,5 +1,5 @@
 -- book_sync.lua
--- 书籍文件云端同步模块
+-- Book file cloud sync module
 
 local logger = require("logger")
 local lfs = require("libs/libkoreader-lfs")
@@ -126,29 +126,36 @@ function M.write_batch_book_log(results, action)
     local device_name = utils.get_device_name()
     local device_id = utils.get_device_id()
     
-    local action_text = (action == "upload") and "书籍同步-批量上传" or (action == "download") and "书籍同步-批量下载" or "书籍同步-批量删除"
+    local action_text = ""
+    if action == "upload" then
+        action_text = _("Book sync") .. "-" .. _("Batch upload")
+    elseif action == "download" then
+        action_text = _("Book sync") .. "-" .. _("Batch download")
+    else
+        action_text = _("Book sync") .. "-" .. _("Batch delete")
+    end
     
     local new_record = {}
     table.insert(new_record, utils.SEPARATOR_LINE)
-    table.insert(new_record, string.format("同步时间: %s", timestamp))
-    table.insert(new_record, string.format("操作设备: %s", device_name))
-    table.insert(new_record, string.format("设备ID: %s", device_id))
-    table.insert(new_record, string.format("操作类型: %s", action_text))
+    table.insert(new_record, string.format(_("Sync time: %s"), timestamp))
+    table.insert(new_record, string.format(_("Device: %s"), device_name))
+    table.insert(new_record, string.format(_("Device ID: %s"), device_id))
+    table.insert(new_record, string.format(_("Operation type: %s"), action_text))
     table.insert(new_record, utils.SEPARATOR_LINE)
     
-    table.insert(new_record, string.format("【成功】(%d 本)", #(results.success or {})))
+    table.insert(new_record, string.format(_("[Success] (%d books)"), #(results.success or {})))
     table.insert(new_record, string.rep("-", 40))
     if #(results.success or {}) > 0 then
         for _, book in ipairs(results.success) do
             table.insert(new_record, string.format("  ✓ %s", book.name))
         end
     else
-        table.insert(new_record, "  无")
+        table.insert(new_record, _("  None"))
     end
     table.insert(new_record, "")
     
     if results.skipped and #results.skipped > 0 then
-        table.insert(new_record, string.format("【跳过】(%d 本)", #results.skipped))
+        table.insert(new_record, string.format(_("[Skipped] (%d books)"), #results.skipped))
         table.insert(new_record, string.rep("-", 40))
         for _, book in ipairs(results.skipped) do
             table.insert(new_record, string.format("  ○ %s (%s)", book.name, book.reason))
@@ -156,12 +163,12 @@ function M.write_batch_book_log(results, action)
         table.insert(new_record, "")
     end
     
-    table.insert(new_record, string.format("【失败】(%d 本)", #(results.failed or {})))
+    table.insert(new_record, string.format(_("[Failed] (%d books)"), #(results.failed or {})))
     table.insert(new_record, string.rep("-", 40))
     if #(results.failed or {}) > 0 then
         local failed_by_reason = {}
         for _, book in ipairs(results.failed) do
-            local key = book.reason or "未知错误"
+            local key = book.reason or _("Unknown error")
             if not failed_by_reason[key] then
                 failed_by_reason[key] = { books = {} }
             end
@@ -170,14 +177,14 @@ function M.write_batch_book_log(results, action)
         local reason_index = 0
         for reason, info in pairs(failed_by_reason) do
             reason_index = reason_index + 1
-            table.insert(new_record, string.format("\n【失败原因 %d】%s", reason_index, reason))
+            table.insert(new_record, string.format("\n" .. _("[Failure reason %d] %s"), reason_index, reason))
             table.insert(new_record, string.rep("~", 40))
             for i, book in ipairs(info.books) do
                 table.insert(new_record, string.format("  (%d) %s", i, book.name))
             end
         end
     else
-        table.insert(new_record, "  无")
+        table.insert(new_record, _("  None"))
     end
     table.insert(new_record, "")
     table.insert(new_record, "")
@@ -206,7 +213,7 @@ function M.upload_book(book_path, show_msg, naming_mode, book_info)
     show_msg = (show_msg == nil) or show_msg
     
     if lfs.attributes(book_path, "mode") ~= "file" then
-        if show_msg then show_notification(_("书籍文件不存在"), 2) end
+        if show_msg then show_notification(_("Book file does not exist"), 2) end
         return false, "file_not_found"
     end
     
@@ -219,24 +226,24 @@ function M.upload_book(book_path, show_msg, naming_mode, book_info)
         end
     end
     if not is_book then
-        if show_msg then show_notification(_("不支持的文件格式"), 2) end
+        if show_msg then show_notification(_("Unsupported file format"), 2) end
         return false, "unsupported_format"
     end
     
     local server = get_book_server()
     if not server then
-        if show_msg then show_notification(_("未配置云存储服务"), 2) end
+        if show_msg then show_notification(_("Cloud storage service not configured"), 2) end
         return false, "no_server_config"
     end
     
     if not NetworkMgr:isOnline() then
-        if show_msg then show_notification(_("设备未连接到网络"), 2) end
+        if show_msg then show_notification(_("Device not connected to network"), 2) end
         return false, "no_network"
     end
     
     local api = get_api(server)
     if not api then
-        if show_msg then show_notification(_("不支持的云服务类型"), 2) end
+        if show_msg then show_notification(_("Unsupported cloud storage type"), 2) end
         return false, "unsupported_server"
     end
     
@@ -248,7 +255,7 @@ function M.upload_book(book_path, show_msg, naming_mode, book_info)
     local cloud_path = get_cloud_path(server, cloud_filename)
     
     if not cloud_path then
-        if show_msg then show_notification(_("无法构建云端路径"), 2) end
+        if show_msg then show_notification(_("Cannot build cloud path"), 2) end
         return false, "path_error"
     end
     
@@ -266,23 +273,23 @@ function M.upload_book(book_path, show_msg, naming_mode, book_info)
     if type(code) == "number" and code >= 200 and code < 300 then
         return true, "success"
     elseif type(code) == "number" and code == 401 then
-        if show_msg then show_notification(_("云存储认证失败，请重新配置"), 3) end
+        if show_msg then show_notification(_("Cloud storage authentication failed, please reconfigure"), 3) end
         return false, "auth_failed"
     else
         if show_msg then
-            show_notification(string.format(_("上传失败 (HTTP %s)"), tostring(code)), 3)
+            show_notification(string.format(_("Upload failed (HTTP %s)"), tostring(code)), 3)
         end
         return false, "upload_failed"
     end
 end
 
-function M.download_book(cloud_filename, target_dir, show_msg)
+function M.download_book(cloud_filename, target_dir, show_msg, progress_callback)
     show_msg = (show_msg == nil) or show_msg
     
     local settings = G_reader_settings:readSetting("cloud_library_plugin", {})
     local download_dir = target_dir or settings.book_download_dir
     if not download_dir or download_dir == "" then
-        if show_msg then show_notification(_("请先在设置中指定书籍本地下载目录"), 3) end
+        if show_msg then show_notification(_("Please set book download directory in settings first"), 3) end
         return false, "no_download_dir"
     end
     
@@ -291,7 +298,7 @@ function M.download_book(cloud_filename, target_dir, show_msg)
             os.execute("mkdir -p " .. download_dir)
         end)
         if lfs.attributes(download_dir, "mode") ~= "directory" then
-            if show_msg then show_notification(_("无法创建下载目录"), 2) end
+            if show_msg then show_notification(_("Cannot create download directory"), 2) end
             return false, "cannot_create_dir"
         end
     end
@@ -304,30 +311,30 @@ function M.download_book(cloud_filename, target_dir, show_msg)
     
     local server = get_book_server()
     if not server then
-        if show_msg then show_notification(_("未配置云存储服务"), 2) end
+        if show_msg then show_notification(_("Cloud storage service not configured"), 2) end
         return false, "no_server_config"
     end
     
     if not NetworkMgr:isOnline() then
-        if show_msg then show_notification(_("设备未连接到网络"), 2) end
+        if show_msg then show_notification(_("Device not connected to network"), 2) end
         return false, "no_network"
     end
     
     local api = get_api(server)
     if not api then
-        if show_msg then show_notification(_("不支持的云服务类型"), 2) end
+        if show_msg then show_notification(_("Unsupported cloud storage type"), 2) end
         return false, "unsupported_server"
     end
     
     local cloud_path = get_cloud_path(server, cloud_filename)
     
     if not cloud_path then
-        if show_msg then show_notification(_("无法构建云端路径"), 2) end
+        if show_msg then show_notification(_("Cannot build cloud path"), 2) end
         return false, "path_error"
     end
     
     if show_msg then
-        show_notification(string.format(_("正在下载: %s"), cloud_filename), 2)
+        show_notification(string.format(_("Downloading: %s"), cloud_filename), 2)
     end
     
     local code
@@ -336,25 +343,25 @@ function M.download_book(cloud_filename, target_dir, show_msg)
         if server.address and server.address ~= "" then
             token = api:getAccessToken(server.password, server.address)
         end
-        code = api:downloadFile(cloud_path, token, local_path)
+        code = api:downloadFile(cloud_path, token, local_path, progress_callback)
     else
-        code = api:downloadFile(cloud_path, server.username, server.password, local_path)
+        code = api:downloadFile(cloud_path, server.username, server.password, local_path, progress_callback)
     end
     
     if type(code) == "number" and code == 200 then
         if show_msg then
-            show_notification(string.format(_("✓ 下载成功: %s"), cloud_filename), 2)
+            show_notification(string.format(_("✓ Download successful: %s"), cloud_filename), 2)
         end
         return true, "success", local_path
     elseif type(code) == "number" and code == 404 then
-        if show_msg then show_notification(_("云端文件不存在"), 2) end
+        if show_msg then show_notification(_("Cloud file does not exist"), 2) end
         return false, "file_not_found"
     elseif type(code) == "number" and code == 401 then
-        if show_msg then show_notification(_("云存储认证失败"), 2) end
+        if show_msg then show_notification(_("Cloud storage authentication failed"), 2) end
         return false, "auth_failed"
     else
         if show_msg then
-            show_notification(string.format(_("下载失败 (HTTP %s)"), tostring(code)), 3)
+            show_notification(string.format(_("Download failed (HTTP %s)"), tostring(code)), 3)
         end
         return false, "download_failed"
     end
@@ -365,19 +372,19 @@ function M.delete_cloud_book(cloud_filename, show_msg)
     
     local server = get_book_server()
     if not server then
-        if show_msg then show_notification(_("未配置云存储服务"), 2) end
+        if show_msg then show_notification(_("Cloud storage service not configured"), 2) end
         return false, "no_server_config"
     end
     
     if not NetworkMgr:isOnline() then
-        if show_msg then show_notification(_("设备未连接到网络"), 2) end
+        if show_msg then show_notification(_("Device not connected to network"), 2) end
         return false, "no_network"
     end
     
     local cloud_path = get_cloud_path(server, cloud_filename)
     
     if not cloud_path then
-        if show_msg then show_notification(_("无法构建云端路径"), 2) end
+        if show_msg then show_notification(_("Cannot build cloud path"), 2) end
         return false, "path_error"
     end
     
@@ -430,24 +437,24 @@ function M.delete_cloud_book(cloud_filename, show_msg)
         
         code = status_code or 500
     else
-        if show_msg then show_notification(_("不支持的云服务类型"), 2) end
+        if show_msg then show_notification(_("Unsupported cloud storage type"), 2) end
         return false, "unsupported_server"
     end
     
     if type(code) == "number" and code >= 200 and code < 300 then
         if show_msg then
-            show_notification(string.format(_("✓ 删除成功: %s"), cloud_filename), 2)
+            show_notification(string.format(_("✓ Delete successful: %s"), cloud_filename), 2)
         end
         return true, "success"
     elseif type(code) == "number" and code == 404 then
-        if show_msg then show_notification(_("云端文件不存在"), 2) end
+        if show_msg then show_notification(_("Cloud file does not exist"), 2) end
         return false, "file_not_found"
     elseif type(code) == "number" and code == 401 then
-        if show_msg then show_notification(_("云存储认证失败，请重新配置"), 3) end
+        if show_msg then show_notification(_("Cloud storage authentication failed, please reconfigure"), 3) end
         return false, "auth_failed"
     else
         if show_msg then
-            show_notification(string.format(_("删除失败 (HTTP %s)"), tostring(code)), 3)
+            show_notification(string.format(_("Delete failed (HTTP %s)"), tostring(code)), 3)
         end
         return false, "delete_failed"
     end
@@ -459,59 +466,87 @@ function M.batch_delete_books(book_names, settings)
         failed = {}
     }
     
-    for _, filename in ipairs(book_names) do
-        local success, error_msg = M.delete_cloud_book(filename, false)
-        
-        if success then
-            table.insert(results.success, {
-                name = filename,
-            })
-        else
-            table.insert(results.failed, {
-                name = filename,
-                reason = error_msg
-            })
+    local total = #book_names
+    local completed = 0
+    local index = 1
+    
+    local ProgressbarDialog = require("ui/widget/progressbardialog")
+    local blitbuffer = require("ffi/blitbuffer")
+    local progress_dialog = ProgressbarDialog:new{
+        title = _("Deleting books..."),
+        subtitle = string.format("%d book(s)", total),
+        progress = 0,
+        progress_max = total,
+        refresh_time_seconds = 0.1
+    }
+    if progress_dialog.progress_bar then
+        progress_dialog.progress_bar.fillcolor = blitbuffer.COLOR_BLACK
+    end
+    progress_dialog:show()
+    
+    
+    local function delete_next()
+        if index > total then
+            progress_dialog:close()
+            M.write_batch_book_log(results, "delete")
+            
+            if settings then
+                settings.last_sync = os.date("%Y-%m-%d %H:%M:%S") .. " (" .. _("Book sync") .. "-" .. _("Batch delete") .. ")"
+                G_reader_settings:saveSetting("cloud_library_plugin", settings)
+            end
+            
+            local msg = string.format(_("Delete completed: %d success, %d failed"), #results.success, #results.failed)
+            show_notification(msg, 3)
+            
+            if #results.failed > 0 then
+                UIManager:scheduleIn(0.5, function()
+                    local fail_msg = M.formatFailureDetails(results.failed)
+                    local TextViewer = require("ui/widget/textviewer")
+                    UIManager:show(TextViewer:new{
+                        title = _("Delete failed details"),
+                        text = fail_msg,
+                    })
+                end)
+            end
+            return
         end
         
-        UIManager:scheduleIn(0.01, function() end)
-    end
-    
-    M.write_batch_book_log(results, "delete")
-    
-    if settings then
-        settings.last_sync = os.date("%Y-%m-%d %H:%M:%S") .. " (书籍同步-批量删除)"
-        G_reader_settings:saveSetting("cloud_library_plugin", settings)
-    end
-    
-    local msg = string.format("删除完成: %d 成功, %d 失败", #results.success, #results.failed)
-    show_notification(msg, 3)
-    
-    if #results.failed > 0 then
-        UIManager:scheduleIn(0.5, function()
-            local fail_msg = M.formatFailureDetails(results.failed)
-            local TextViewer = require("ui/widget/textviewer")
-            UIManager:show(TextViewer:new{
-                title = _("删除失败详情"),
-                text = fail_msg,
-            })
+        local filename = book_names[index]
+        index = index + 1
+        
+        UIManager:scheduleIn(0, function()
+            local success, error_msg = M.delete_cloud_book(filename, false)
+            
+            if success then
+                table.insert(results.success, { name = filename })
+            else
+                table.insert(results.failed, { name = filename, reason = error_msg })
+            end
+            
+            completed = completed + 1
+            progress_dialog:reportProgress(completed)
+            UIManager:setDirty(progress_dialog, "ui")
+            delete_next()
         end)
     end
+    
+    delete_next()
 end
 
 function M.get_cloud_book_list()
     local server = get_book_server()
     if not server then
-        return nil, "未配置云存储服务"
+        return nil, _("Cloud storage service not configured")
     end
     
     local book_dir = server.url
     if not book_dir or book_dir == "" then
-        return nil, "云端目录未设置"
+        return nil, _("Cloud directory not set")
     end
     
     local api = get_api(server)
     if not api then
-        return nil, "不支持的云服务类型"
+        return nil, _("Unsupported cloud storage type")
     end
     
     local items
@@ -523,20 +558,20 @@ function M.get_cloud_book_list()
             end
             items = api:listFolder(book_dir, token, false)
         else
-            return nil, "Dropbox API 不支持获取目录列表"
+            return nil, _("Dropbox API does not support listing folders")
         end
     elseif server.type == "webdav" then
         if api.listFolder then
             items = api:listFolder(server.address, server.username, server.password, book_dir, false)
         else
-            return nil, "WebDAV API 不支持获取目录列表"
+            return nil, _("WebDAV API does not support listing folders")
         end
     else
-        return nil, "不支持的云服务类型"
+        return nil, _("Unsupported cloud storage type")
     end
     
     if not items or type(items) ~= "table" then
-        return nil, "无法获取云端文件列表"
+        return nil, _("Cannot get cloud file list")
     end
     
     local books = {}
@@ -566,38 +601,33 @@ function M.get_cloud_book_list()
 end
 
 function M.show_cloud_book_dialog(callback, plugin)
-    -- 👇 检查1：网络连接
     local NetworkMgr = require("ui/network/manager")
     if not NetworkMgr:isOnline() then
-        show_notification(_("网络未连接，无法获取云端列表"), 3)
+        show_notification(_("No network connection, cannot get cloud book list"), 3)
         return
     end
     
-    -- 👇 检查2：服务器配置
     local remote = require("remote")
     local server = remote.get_server()
     if not server then
-        show_notification(_("未配置云存储服务，请先在设置中配置"), 3)
+        show_notification(_("Cloud storage service not configured, please configure in settings first"), 3)
         return
     end
     
-    -- 👇 检查3：云端目录
     if not server.url or server.url == "" then
-        show_notification(_("未设置云端目录，请先在云端目录中配置"), 3)
+        show_notification(_("Cloud directory not set, please configure in cloud directory settings"), 3)
         return
     end
     
-    -- 👇 检查4：云服务类型
     local api = remote.get_api(server)
     if not api then
-        show_notification(_("不支持的云服务类型，请使用 WebDAV 或 Dropbox"), 3)
+        show_notification(_("Unsupported cloud storage type, please use WebDAV or Dropbox"), 3)
         return
     end
-    -- 👆
 
     local books, err = M.get_cloud_book_list()
     if not books or #books == 0 then
-        show_notification(err or _("云端没有找到书籍文件"), 3)
+        show_notification(err or _("No books found in cloud"), 3)
         return
     end
     
@@ -652,7 +682,7 @@ function M.show_cloud_book_dialog(callback, plugin)
         if search_keyword ~= "" then
             table.insert(buttons, {
                 {
-                    text = string.format("搜索: \"%s\" (找到 %d 本)", search_keyword, #books),
+                    text = string.format(_("Search: \"%s\" (%d books found)"), search_keyword, #books),
                     enabled = false,
                 }
             })
@@ -680,7 +710,7 @@ function M.show_cloud_book_dialog(callback, plugin)
         if #books == 0 then
             table.insert(buttons, {
                 {
-                    text = _("没有找到匹配的书籍"),
+                    text = _("No books found"),
                     enabled = false,
                     alignment = "center",
                 }
@@ -692,7 +722,7 @@ function M.show_cloud_book_dialog(callback, plugin)
         local nav_buttons = {}
         if current_page > 1 then
             table.insert(nav_buttons, {
-                text = "◀ 上一页",
+                text = _("◀ Previous Page"),
                 callback = function()
                     current_page = current_page - 1
                     if dialog then
@@ -703,12 +733,12 @@ function M.show_cloud_book_dialog(callback, plugin)
             })
         end
         table.insert(nav_buttons, {
-            text = string.format("第 %d/%d 页 (%d本)", current_page, total_pages, #books),
+            text = string.format(_("Page %d/%d (%d books)"), current_page, total_pages, #books),
             enabled = false,
         })
         if current_page < total_pages then
             table.insert(nav_buttons, {
-                text = "下一页 ▶",
+                text = _("Next Page ▶"),
                 callback = function()
                     current_page = current_page + 1
                     if dialog then
@@ -731,7 +761,7 @@ function M.show_cloud_book_dialog(callback, plugin)
         
         table.insert(buttons, {
             {
-                text = _("全选"),
+                text = _("Select All"),
                 callback = function()
                     for _, book in ipairs(original_books) do
                         selected[book.name] = true
@@ -743,7 +773,7 @@ function M.show_cloud_book_dialog(callback, plugin)
                 end
             },
             {
-                text = _("取消全选"),
+                text = _("Deselect All"),
                 callback = function()
                     for _, book in ipairs(original_books) do
                         selected[book.name] = false
@@ -755,7 +785,7 @@ function M.show_cloud_book_dialog(callback, plugin)
                 end
             },
             {
-                text = _("搜索"),
+                text = _("Search"),
                 callback = function()
                     show_search_dialog()
                 end
@@ -764,14 +794,14 @@ function M.show_cloud_book_dialog(callback, plugin)
         
         table.insert(buttons, {
             {
-                text = search_keyword ~= "" and _("清除搜索") or "",
+                text = search_keyword ~= "" and _("Clear Search") or "",
                 enabled = search_keyword ~= "",
                 callback = function()
                     clear_search()
                 end
             },
             {
-                text = string.format(_("删除 (%d)"), selected_count),
+                text = string.format(_("Delete (%d)"), selected_count),
                 callback = function()
                     local selected_names = {}
                     for _, book in ipairs(original_books) do
@@ -784,40 +814,40 @@ function M.show_cloud_book_dialog(callback, plugin)
                     end
                     if #selected_names > 0 then
                         UIManager:show(ConfirmBox:new{
-                            text = string.format(_("确定要删除云端的 %d 本书籍吗？\n此操作不可恢复！"), #selected_names),
-                            ok_text = _("删除"),
-                            cancel_text = _("取消"),
+                            text = string.format(_("Are you sure you want to delete %d book(s) from the cloud?\nThis action cannot be undone!"), #selected_names),
+                            ok_text = _("Delete"),
+                            cancel_text = _("Cancel"),
                             ok_callback = function()
                                 local settings = G_reader_settings:readSetting("cloud_library_plugin", {})
                                 M.batch_delete_books(selected_names, settings)
                             end
                         })
                     else
-                        show_notification(_("未选中任何书籍"), 2)
+                        show_notification(_("No books selected"), 2)
                     end
                 end
             },
+{
+    text = string.format(_("Download (%d)"), selected_count),
+    callback = function()
+        local picked_books = {}
+        for _, book in ipairs(original_books) do
+            if selected[book.name] then
+                table.insert(picked_books, book)
+            end
+        end
+        if dialog then
+            UIManager:close(dialog)
+        end
+        if #picked_books > 0 then
+            callback(picked_books)
+        else
+            show_notification(_("No books selected"), 2)
+        end
+    end
+},
             {
-                text = string.format(_("下载 (%d)"), selected_count),
-                callback = function()
-                    local selected_names = {}
-                    for _, book in ipairs(original_books) do
-                        if selected[book.name] then
-                            table.insert(selected_names, book.name)
-                        end
-                    end
-                    if dialog then
-                        UIManager:close(dialog)
-                    end
-                    if #selected_names > 0 then
-                        callback(selected_names)
-                    else
-                        show_notification(_("未选中任何书籍"), 2)
-                    end
-                end
-            },
-            {
-                text = _("取消"),
+                text = _("Cancel"),
                 callback = function()
                     if dialog then
                         UIManager:close(dialog)
@@ -827,7 +857,7 @@ function M.show_cloud_book_dialog(callback, plugin)
         })
         
         dialog = ButtonDialog:new{
-            title = string.format(_("请选择要下载/删除的书籍 (已选 %d 本)"), selected_count),
+            title = string.format(_("Select books to download/delete (%d selected)"), selected_count),
             title_align = "center",
             buttons = buttons,
             width = math.floor(Screen:getWidth() * 0.85),
@@ -839,20 +869,20 @@ function M.show_cloud_book_dialog(callback, plugin)
         local InputDialog = require("ui/widget/inputdialog")
         local search_dialog = nil
         search_dialog = InputDialog:new{
-            title = _("搜索书籍"),
+            title = _("Search books"),
             input = search_keyword,
-            input_hint = _("输入书名关键字"),
+            input_hint = _("Enter book title keyword"),
             buttons = {
                 {
                     {
-                        text = _("取消"),
+                        text = _("Cancel"),
                         id = "close",
                         callback = function()
                             UIManager:close(search_dialog)
                         end,
                     },
                     {
-                        text = _("搜索"),
+                        text = _("Search"),
                         is_enter_default = true,
                         callback = function()
                             search_keyword = search_dialog:getInputText()
@@ -892,65 +922,93 @@ function M.batchUploadBooks(selected_books, naming_mode, settings, plugin)
         failed = {}
     }
     
-    for _, book_info in ipairs(selected_books) do
-        local path = book_info.path or book_info.file_path
-        local local_name = path:match("([^/]+)$") or "未知"
+    local total = #selected_books
+    local completed = 0
+    local index = 1
+    
+    local ProgressbarDialog = require("ui/widget/progressbardialog")
+    local blitbuffer = require("ffi/blitbuffer")
+    local progress_dialog = ProgressbarDialog:new{
+        title = _("Uploading books..."),
+        subtitle = string.format("%d book(s)", total),
+        progress = 0,
+        progress_max = total,
+        refresh_time_seconds = 0.1
+    }
+    if progress_dialog.progress_bar then
+        progress_dialog.progress_bar.fillcolor = blitbuffer.COLOR_BLACK
+    end
+    progress_dialog:show()
+   
+    
+    local function upload_next()
+        if index > total then
+            progress_dialog:close()
+            M.write_batch_book_log(results, "upload")
+            settings.last_sync = os.date("%Y-%m-%d %H:%M:%S") .. " (" .. _("Book sync") .. "-" .. _("Batch upload") .. ")"
+            G_reader_settings:saveSetting(plugin.plugin_id, settings)
+            
+            local msg = string.format(_("Upload completed: %d success, %d failed"), #results.success, #results.failed)
+            UIManager:show(Notification:new{ text = msg, timeout = 2 })
+            
+            if #results.failed > 0 then
+                UIManager:scheduleIn(0.5, function()
+                    local fail_msg = M.formatFailureDetails(results.failed)
+                    local TextViewer = require("ui/widget/textviewer")
+                    UIManager:show(TextViewer:new{
+                        title = _("Upload failed details"),
+                        text = fail_msg,
+                    })
+                end)
+            end
+            
+            M.cleanupFileManagerSelection()
+            return
+        end
         
+        local book_info = selected_books[index]
+        index = index + 1
+        
+        local path = book_info.path or book_info.file_path
+        local local_name = path:match("([^/]+)$") or _("Unknown")
         local cloud_name = M.get_cloud_filename_for_path({
             file_path = path,
             title = book_info.title,
             author = book_info.author,
         }, naming_mode)
         
-        local success, error_msg = M.upload_book(path, false, naming_mode, {
-            title = book_info.title,
-            author = book_info.author,
-        })
-        
-        if success then
-            table.insert(results.success, {
-                name = local_name,
-                cloud_name = cloud_name,
-                path = path
+        UIManager:scheduleIn(0, function()
+            local success, error_msg = M.upload_book(path, false, naming_mode, {
+                title = book_info.title,
+                author = book_info.author,
             })
-        else
-            table.insert(results.failed, {
-                name = local_name,
-                cloud_name = cloud_name,
-                path = path,
-                reason = error_msg
-            })
-        end
-        
-        UIManager:scheduleIn(0.01, function() end)
-    end
-    
-    M.write_batch_book_log(results, "upload")
-    
-    settings.last_sync = os.date("%Y-%m-%d %H:%M:%S") .. " (书籍同步-批量上传)"
-    G_reader_settings:saveSetting(plugin.plugin_id, settings)
-    
-    local msg = string.format("书籍上传完成: %d 成功, %d 失败", #results.success, #results.failed)
-    UIManager:show(Notification:new{
-        text = msg,
-        timeout = 2
-    })
-    
-    if #results.failed > 0 then
-        UIManager:scheduleIn(0.5, function()
-            local fail_msg = M.formatFailureDetails(results.failed)
-            local TextViewer = require("ui/widget/textviewer")
-            UIManager:show(TextViewer:new{
-                title = _("上传失败详情"),
-                text = fail_msg,
-            })
+            
+            if success then
+                table.insert(results.success, {
+                    name = local_name,
+                    cloud_name = cloud_name,
+                    path = path
+                })
+            else
+                table.insert(results.failed, {
+                    name = local_name,
+                    cloud_name = cloud_name,
+                    path = path,
+                    reason = error_msg
+                })
+            end
+            
+            completed = completed + 1
+            progress_dialog:reportProgress(completed)
+            UIManager:setDirty(progress_dialog, "ui")
+            upload_next()
         end)
     end
     
-    M.cleanupFileManagerSelection()
+    upload_next()
 end
 
-function M.batchDownloadBooks(book_names, settings, plugin)
+function M.batchDownloadBooks(books, settings, plugin)
     local download_dir = settings.book_download_dir
     local results = {
         success = {},
@@ -960,58 +1018,122 @@ function M.batchDownloadBooks(book_names, settings, plugin)
     
     if not download_dir or download_dir == "" then
         table.insert(results.failed, {
-            name = "所有书籍",
-            reason = "下载目录未设置"
+            name = _("All books"),
+            reason = _("Download directory not set")
         })
-    else
-        for _, filename in ipairs(book_names) do
-            local success, error_msg, _ = M.download_book(filename, nil, false)
+        M.write_batch_book_log(results, "download")
+        show_notification(_("Download completed: 0 success, 1 failed, 0 skipped"), 3)
+        return
+    end
+    
+    local total_bytes = 0
+    for _, book in ipairs(books) do
+        total_bytes = total_bytes + (tonumber(book.size) or 0)
+    end
+    
+    local index = 1
+    local total_downloaded = 0
+    
+    local ProgressbarDialog = require("ui/widget/progressbardialog")
+    local blitbuffer = require("ffi/blitbuffer")
+    local progress_dialog = ProgressbarDialog:new{
+        title = _("Downloading books..."),
+        subtitle = string.format("%d book(s)", #books),
+        progress = 0,
+        progress_max = total_bytes,
+        refresh_time_seconds = 0.1
+    }
+    if progress_dialog.progress_bar then
+        progress_dialog.progress_bar.fillcolor = blitbuffer.COLOR_BLACK
+    end
+    progress_dialog:show()
+    
+    local function download_next()
+        if index > #books then
+            progress_dialog:close()
+            M.write_batch_book_log(results, "download")
+            settings.last_sync = os.date("%Y-%m-%d %H:%M:%S") .. " (" .. _("Book sync") .. "-" .. _("Batch download") .. ")"
+            G_reader_settings:saveSetting(plugin.plugin_id, settings)
             
-            if success then
-                table.insert(results.success, {
-                    name = filename,
-                    path = download_dir .. "/" .. filename
-                })
-            elseif error_msg == "file_exists" then
-                table.insert(results.skipped, {
-                    name = filename,
-                    reason = "本地已存在同名文件"
-                })
-            else
-                table.insert(results.failed, {
-                    name = filename,
-                    reason = error_msg
-                })
+            local msg = string.format(_("Download completed: %d success, %d failed, %d skipped"), 
+                #results.success, #results.failed, #results.skipped)
+            show_notification(msg, 3)
+            
+            if #results.failed > 0 then
+                UIManager:scheduleIn(0.5, function()
+                    local fail_msg = M.formatFailureDetails(results.failed)
+                    local TextViewer = require("ui/widget/textviewer")
+                    UIManager:show(TextViewer:new{
+                        title = _("Download failed details"),
+                        text = fail_msg,
+                    })
+                end)
             end
             
-            UIManager:scheduleIn(0.01, function() end)
+            M.refreshFileManager()
+            return
         end
-    end
-    
-    M.write_batch_book_log(results, "download")
-    
-    settings.last_sync = os.date("%Y-%m-%d %H:%M:%S") .. " (书籍同步-批量下载)"
-    G_reader_settings:saveSetting(plugin.plugin_id, settings)
-    
-    local msg = string.format("下载完成: %d 成功, %d 失败, %d 跳过", 
-        #results.success, #results.failed, #results.skipped)
-    UIManager:show(Notification:new{
-        text = msg,
-        timeout = 2
-    })
-    
-    if #results.failed > 0 then
-        UIManager:scheduleIn(0.5, function()
-            local fail_msg = M.formatFailureDetails(results.failed)
-            local TextViewer = require("ui/widget/textviewer")
-            UIManager:show(TextViewer:new{
-                title = _("下载失败详情"),
-                text = fail_msg,
+        
+        local book = books[index]
+        local filename = book.name
+        local file_size = tonumber(book.size) or 0
+        local local_path = download_dir .. "/" .. filename
+        
+        if lfs.attributes(local_path, "mode") == "file" then
+            table.insert(results.skipped, {
+                name = filename,
+                reason = _("Local file with same name already exists")
             })
-        end)
+            total_downloaded = total_downloaded + file_size
+            progress_dialog:reportProgress(total_downloaded)
+            UIManager:setDirty(progress_dialog, "ui")
+            index = index + 1
+            UIManager:scheduleIn(0, download_next)
+            return
+        end
+        
+        local this_book_downloaded = 0
+        local progress_callback = function(byte_count)
+            byte_count = tonumber(byte_count) or 0
+            local delta = byte_count - this_book_downloaded
+            if delta > 0 then
+                this_book_downloaded = byte_count
+                total_downloaded = total_downloaded + delta
+                progress_dialog:reportProgress(total_downloaded)
+                UIManager:setDirty(progress_dialog, "ui")
+            end
+        end
+        
+        local success, error_msg, _ = M.download_book(filename, nil, false, progress_callback)
+        
+        if success then
+            table.insert(results.success, {
+                name = filename,
+                path = local_path
+            })
+        elseif error_msg == "file_exists" then
+            table.insert(results.skipped, {
+                name = filename,
+                reason = _("Local file with same name already exists")
+            })
+        else
+            table.insert(results.failed, {
+                name = filename,
+                reason = error_msg
+            })
+        end
+        
+        local remaining = file_size - this_book_downloaded
+        if remaining > 0 then
+            total_downloaded = total_downloaded + remaining
+        end
+        progress_dialog:reportProgress(total_downloaded)
+        UIManager:setDirty(progress_dialog, "ui")
+        index = index + 1
+        UIManager:scheduleIn(0, download_next)
     end
     
-    M.refreshFileManager()
+    download_next()
 end
 
 function M.refreshFileManager()
@@ -1023,11 +1145,11 @@ function M.refreshFileManager()
 end
 
 function M.formatFailureDetails(failed_list)
-    local fail_msg = "失败详情:\n\n"
+    local fail_msg = _("Failure details:\n\n")
     
     local failed_by_reason = {}
     for _, fail in ipairs(failed_list) do
-        local reason = fail.reason or "未知错误"
+        local reason = fail.reason or _("Unknown error")
         if not failed_by_reason[reason] then
             failed_by_reason[reason] = {}
         end
@@ -1037,7 +1159,7 @@ function M.formatFailureDetails(failed_list)
     local reason_index = 0
     for reason, books in pairs(failed_by_reason) do
         reason_index = reason_index + 1
-        fail_msg = fail_msg .. string.format("【失败原因 %d】%s\n", reason_index, reason)
+        fail_msg = fail_msg .. string.format(_("[Failure reason %d] %s\n"), reason_index, reason)
         fail_msg = fail_msg .. string.rep("~", 40) .. "\n"
         for i, book in ipairs(books) do
             fail_msg = fail_msg .. string.format("  %d. %s", i, book.name)
@@ -1053,14 +1175,14 @@ function M.formatFailureDetails(failed_list)
 end
 
 function M.formatSkippedDetails(skipped_list)
-    local skip_msg = "跳过详情:\n\n"
-    skip_msg = skip_msg .. string.format("共 %d 本书籍因本地已存在同名文件而被跳过:\n\n", #skipped_list)
+    local skip_msg = _("Skipped details:\n\n")
+    skip_msg = skip_msg .. string.format(_("%d book(s) were skipped because local files with the same name already exist:\n\n"), #skipped_list)
     
     for i, book in ipairs(skipped_list) do
         skip_msg = skip_msg .. string.format("  %d. %s\n", i, book.name)
     end
     
-    skip_msg = skip_msg .. "\n提示: 如需重新下载，请先删除或重命名本地同名文件"
+    skip_msg = skip_msg .. _("\nHint: To re-download, please delete or rename the local files first")
     
     return skip_msg
 end
@@ -1082,50 +1204,45 @@ function M.cleanupFileManagerSelection()
 end
 
 function M.batchUploadWithFMSelection(plugin)
-    -- 👇 检查1：网络连接
     local NetworkMgr = require("ui/network/manager")
     if not NetworkMgr:isOnline() then
         UIManager:show(Notification:new{
-            text = _("网络未连接，无法上传"),
+            text = _("No network connection, cannot upload"),
             timeout = 3
         })
         return
     end
     
-    -- 👇 检查2：服务器配置
     local remote = require("remote")
     local server = remote.get_server()
     if not server then
         UIManager:show(Notification:new{
-            text = _("未配置云存储服务，请先在设置中配置"),
+            text = _("Cloud storage service not configured, please configure in settings first"),
             timeout = 3
         })
         return
     end
     
-    -- 👇 检查3：云端目录
     if not server.url or server.url == "" then
         UIManager:show(Notification:new{
-            text = _("未设置云端目录，请先在云端目录中配置"),
+            text = _("Cloud directory not set, please configure in cloud directory settings"),
             timeout = 3
         })
         return
     end
     
-    -- 👇 检查4：云服务类型
     local api = remote.get_api(server)
     if not api then
         UIManager:show(Notification:new{
-            text = _("不支持的云服务类型，请使用 WebDAV 或 Dropbox"),
+            text = _("Unsupported cloud storage type, please use WebDAV or Dropbox"),
             timeout = 3
         })
         return
     end
-    -- 👆
 
     local ui = plugin.ui
-    local action_text = "上传"
-    local button_text = "批量上传选中书籍"
+    local action_text = _("upload")
+    local button_text = _("Batch upload selected books")
     
     if not ui or not ui.file_chooser then
         local FileManager = require("apps/filemanager/filemanager")
@@ -1148,7 +1265,7 @@ function M.batchUploadWithFMSelection(plugin)
         end
         
         UIManager:show(Notification:new{
-            text = string.format(_("请勾选要%s的书籍，再点击「%s」"), action_text, button_text),
+            text = string.format(_("Please select books to %s, then tap \"%s\""), action_text, button_text),
             timeout = 5
         })
         return
@@ -1159,7 +1276,7 @@ function M.batchUploadWithFMSelection(plugin)
     
     if not fm then
         UIManager:show(Notification:new{
-            text = _("无法获取文件管理器实例"),
+            text = _("Unable to get file manager instance"),
             timeout = 3
         })
         return
@@ -1168,7 +1285,7 @@ function M.batchUploadWithFMSelection(plugin)
     if fm.selected_files == nil then
         fm:onToggleSelectMode(true)
         UIManager:show(Notification:new{
-            text = string.format(_("请勾选要%s的书籍，再点击「%s」"), action_text, button_text),
+            text = string.format(_("Please select books to %s, then tap \"%s\""), action_text, button_text),
             timeout = 5
         })
         return
@@ -1177,7 +1294,7 @@ function M.batchUploadWithFMSelection(plugin)
     local selected_files = fm.selected_files
     if not selected_files or next(selected_files) == nil then
         UIManager:show(Notification:new{
-            text = string.format(_("请勾选要%s的书籍，再点击「%s」"), action_text, button_text),
+            text = string.format(_("Please select books to %s, then tap \"%s\""), action_text, button_text),
             timeout = 5
         })
         return
@@ -1196,7 +1313,7 @@ function M.batchUploadWithFMSelection(plugin)
             end
             
             if is_book then
-                local filename = file:match("([^/]+)$") or "未知"
+                local filename = file:match("([^/]+)$") or _("Unknown")
                 local basename = filename:gsub("%.[^%.]+$", "")
                 
                 local props = {}
@@ -1223,7 +1340,7 @@ function M.batchUploadWithFMSelection(plugin)
     
     if #books == 0 then
         UIManager:show(Notification:new{
-            text = _("没有选中任何有效的书籍文件"),
+            text = _("No valid book files selected"),
             timeout = 3
         })
         return
@@ -1232,9 +1349,9 @@ function M.batchUploadWithFMSelection(plugin)
     local naming_mode = plugin.settings.book_naming_mode or "title"
     
     UIManager:show(ConfirmBox:new{
-        text = string.format("将上传 %d 本书籍到云端", #books),
-        ok_text = _("继续"),
-        cancel_text = _("取消"),
+        text = string.format(_("Upload %d book(s) to cloud"), #books),
+        ok_text = _("Continue"),
+        cancel_text = _("Cancel"),
         ok_callback = function()
             M.batchUploadBooks(books, naming_mode, plugin.settings, plugin)
         end
