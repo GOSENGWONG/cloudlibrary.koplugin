@@ -816,16 +816,16 @@ function CloudLibraryPlugin:showPluginInfo()
     -- Select README file based on language
     local readme_path
     if is_chinese then
-        readme_path = plugin_dir .. "README.md"
+        readme_path = plugin_dir .. "README.zh_CN.md"
         -- Fallback to English if Chinese README doesn't exist
         if not lfs.attributes(readme_path, "mode") then
-            readme_path = plugin_dir .. "README.en.md"
+            readme_path = plugin_dir .. "README.md"
         end
     else
-        readme_path = plugin_dir .. "README.en.md"
+        readme_path = plugin_dir .. "README.md"
         -- Fallback to Chinese if English README doesn't exist
         if not lfs.attributes(readme_path, "mode") then
-            readme_path = plugin_dir .. "README.md"
+            readme_path = plugin_dir .. "README.zh_CN.md"
         end
     end
     
