@@ -1,5 +1,28 @@
+-- Get plugin root directory absolute path (inspired by zen_ui)
+local src = debug.getinfo(1, "S").source or ""
+local path = (src:sub(1, 1) == "@") and src:sub(2):match("^(.*)/[^/]+$") or nil
+
+local _plugin_dir  -- Declare local variable
+
+if path then
+    -- Handle relative path (some KOReader installations may return relative paths)
+    if path:sub(1, 1) ~= "/" then
+        local ok, lfs = pcall(require, "libs/libkoreader-lfs")
+        local cwd = ok and lfs and lfs.currentdir()
+        if cwd then
+            path = cwd .. "/" .. path
+        end
+    end
+    _plugin_dir = path .. "/"
+else
+    _plugin_dir = "./"
+end
+
+-- Add plugin directory to package.path to avoid module name conflicts
+package.path = _plugin_dir .. "?.lua;" .. package.path
+
 -- i18n must be installed before any other require()
-local i18n = require("i18n")
+local i18n = dofile(_plugin_dir .. "i18n.lua")
 i18n.install()
 
 local WidgetContainer = require("ui/widget/container/widgetcontainer")
