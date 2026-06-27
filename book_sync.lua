@@ -945,6 +945,22 @@ function M.show_cloud_book_dialog(callback, plugin)
             end
         end
 
+        -- Hardware page-turn keys (Kindle side buttons) flip the list pages too,
+        -- the natural gesture on these devices. Forward keys -> next page,
+        -- back keys -> previous page.
+        if Device:hasKeys() then
+            dialog.key_events.CloudNextPage = { { "LPgFwd" }, { "RPgFwd" } }
+            dialog.key_events.CloudPrevPage = { { "LPgBack" }, { "RPgBack" } }
+            dialog.onCloudNextPage = function()
+                go_to_page(current_page + 1)
+                return true
+            end
+            dialog.onCloudPrevPage = function()
+                go_to_page(current_page - 1)
+                return true
+            end
+        end
+
         UIManager:show(dialog)
         -- Make the cursor position visible on D-pad devices (and restore the
         -- highlight on the row we advanced to after an in-list rebuild).
