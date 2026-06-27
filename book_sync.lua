@@ -689,7 +689,8 @@ function M.show_cloud_book_dialog(callback, plugin)
         if page > total_pages then page = total_pages end
         if page == current_page then return false end
         current_page = page
-        if dialog then UIManager:close(dialog) end
+        -- put the cursor on the first book row of the new page
+        keep_focus = { x = 1, y = (search_keyword ~= "" and 2 or 1) }
         update_buttons()
         return true
     end
@@ -768,7 +769,6 @@ function M.show_cloud_book_dialog(callback, plugin)
                                     keep_focus = { x = 1, y = this_y }
                                 end
                             end
-                            UIManager:close(dialog)
                             update_buttons()
                         end
                     end,
@@ -827,9 +827,6 @@ function M.show_cloud_book_dialog(callback, plugin)
                     for _, book in ipairs(original_books) do
                         selected[book.name] = true
                     end
-                    if dialog then
-                        UIManager:close(dialog)
-                    end
                     update_buttons()
                 end
             },
@@ -838,9 +835,6 @@ function M.show_cloud_book_dialog(callback, plugin)
                 callback = function()
                     for _, book in ipairs(original_books) do
                         selected[book.name] = false
-                    end
-                    if dialog then
-                        UIManager:close(dialog)
                     end
                     update_buttons()
                 end
@@ -917,53 +911,108 @@ function M.show_cloud_book_dialog(callback, plugin)
             },
         })
         
-        dialog = ButtonDialog:new{
-            title = string.format(_("Select books to download/delete (%d selected)"), selected_count),
-            title_align = "center",
-            buttons = buttons,
-            width = math.floor(Screen:getWidth() * 0.85),
-            selected = keep_focus, -- restore cursor row after an in-list rebuild (nil = default top)
-        }
+        local title_text = string.format(_("Select books to download/delete (%d selected)"), selected_count)
+        -- Where the cursor should land after (re)building: an explicit
+        -- keep_focus set by a toggle / page turn, otherwise the first book row.
+        local target_focus = keep_focus or { x = 1, y = (search_keyword ~= "" and 2 or 1) }
         keep_focus = nil
 
-        -- Non-touch navigation (D-pad devices): in this single-column list the
-        -- horizontal arrows have no in-row neighbour to move to, so they do
-        -- nothing there. Repurpose them to turn pages while the cursor is on a
-        -- list item (a one-button row); on the multi-column nav/action rows they
-        -- keep moving the focus as usual.
-        if Device:hasDPad() then
-            dialog.onFocusMove = function(self, args)
-                local dx = args[1]
-                if dx ~= 0 and self.layout and self.selected then
-                    local row = self.layout[self.selected.y]
-                    if row and #row == 1 then
-                        go_to_page(current_page + (dx > 0 and 1 or -1))
-                        return true
+        if dialog then
+            -- Rebuild the contents in place via reinit() instead of
+            -- close()+new(). Closing the dialog triggers a flashing e-ink
+            -- refresh (onCloseWidget -> "flashui") on every checkbox toggle;
+            -- reinit() rebuilds the button table on the same widget with a
+            -- plain "ui" refresh (this is what ButtonDialog:setTitle does),
+            -- so it no longer flashes, and the widget's key bindings and the
+            -- onFocusMove override are preserved.
+            dialog.title = title_text
+            dialog.buttons = buttons
+            dialog.selected = target_focus
+            -- ButtonDialog:init() does `self.layout = self.layout or buttontable.layout`,
+            -- so on reinit the stale layout (pointing at freed buttons) would be
+            -- kept and the focus highlight would land on nothing. Clear it so
+            -- init() rebuilds the layout from the new buttontable.
+            dialog.layout = nil
+            -- Same reasoning for the ScrollableContainer: init() only (re)creates
+            -- cropping_widget in the overflow branch, so a stale one left over
+            -- from a taller previous build would keep driving scroll/focus
+            -- geometry (onFocusMove calls _scrollBy on it). Clear it too.
+            dialog.cropping_widget = nil
+            dialog:reinit()
+            UIManager:setDirty(dialog, "ui")
+        else
+            dialog = ButtonDialog:new{
+                title = title_text,
+                title_align = "center",
+                buttons = buttons,
+                width = math.floor(Screen:getWidth() * 0.85),
+                selected = target_focus,
+            }
+
+            -- Non-touch navigation (D-pad devices): in this single-column list
+            -- the horizontal arrows have no in-row neighbour to move to, so they
+            -- do nothing there. Repurpose them to turn pages while the cursor is
+            -- on a list item (a one-button row); on the multi-column nav/action
+            -- rows they keep moving the focus as usual.
+            if Device:hasDPad() then
+                dialog.onFocusMove = function(self, args)
+                    local dx = args[1]
+                    if dx ~= 0 and self.layout and self.selected then
+                        local row = self.layout[self.selected.y]
+                        if row and #row == 1 then
+                            go_to_page(current_page + (dx > 0 and 1 or -1))
+                            return true
+                        end
                     end
+                    return ButtonDialog.onFocusMove(self, args)
                 end
-                return ButtonDialog.onFocusMove(self, args)
             end
+
+            -- Hardware page-turn keys flip the list pages too, the natural
+            -- gesture on these devices. Use KOReader's logical page-key groups
+            -- (not hard-coded LPgFwd/etc.) so they follow the device and screen
+            -- orientation; this also restores a working handler for those keys
+            -- after we strip them from the scroll container below.
+            if Device:hasKeys() then
+                dialog.key_events.CloudNextPage = { { Input.group.PgFwd } }
+                dialog.key_events.CloudPrevPage = { { Input.group.PgBack } }
+                dialog.onCloudNextPage = function()
+                    go_to_page(current_page + 1)
+                    return true
+                end
+                dialog.onCloudPrevPage = function()
+                    go_to_page(current_page - 1)
+                    return true
+                end
+            end
+
+            -- Tell checkbox callbacks whether a toggle came from a hardware-key
+            -- activation (Press on the focused row) vs a touch/mouse tap: only
+            -- the former should advance the cursor / paginate.
+            local orig_onPress = dialog.onPress
+            dialog.onPress = function(self, ...)
+                from_key_press = true
+                local ret = orig_onPress(self, ...)
+                from_key_press = false
+                return ret
+            end
+
+            UIManager:show(dialog)
         end
 
-        -- Hardware page-turn keys (Kindle side buttons) flip the list pages too,
-        -- the natural gesture on these devices. Forward keys -> next page,
-        -- back keys -> previous page.
-        if Device:hasKeys() then
-            dialog.key_events.CloudNextPage = { { "LPgFwd" }, { "RPgFwd" } }
-            dialog.key_events.CloudPrevPage = { { "LPgBack" }, { "RPgBack" } }
-            dialog.onCloudNextPage = function()
-                go_to_page(current_page + 1)
-                return true
-            end
-            dialog.onCloudPrevPage = function()
-                go_to_page(current_page - 1)
-                return true
-            end
+        -- Hardware page-turn keys must flip list pages, not scroll the popup.
+        -- When the dialog is tall enough to be wrapped in a ScrollableContainer,
+        -- that child binds PgFwd/PgBack (== our LPgFwd/RPgFwd/LPgBack/RPgBack) and
+        -- would consume them first. Drop its page-key handlers so our
+        -- CloudNextPage/CloudPrevPage bindings on the dialog win. Re-applied on
+        -- each (re)build since reinit recreates cropping_widget.
+        if dialog.cropping_widget and dialog.cropping_widget.key_events then
+            dialog.cropping_widget.key_events.ScrollPageUp = nil
+            dialog.cropping_widget.key_events.ScrollPageDown = nil
         end
 
-        UIManager:show(dialog)
-        -- Make the cursor position visible on D-pad devices (and restore the
-        -- highlight on the row we advanced to after an in-list rebuild).
+        -- Make the cursor position visible on D-pad devices (and on the row we
+        -- advanced to after an in-list rebuild).
         if Device:hasDPad() then
             dialog:refocusWidget()
             -- After an in-place reinit the ScrollableContainer is recreated with
@@ -1005,9 +1054,6 @@ function M.show_cloud_book_dialog(callback, plugin)
                             search_keyword = search_dialog:getInputText()
                             UIManager:close(search_dialog)
                             refresh_book_list()
-                            if dialog then
-                                UIManager:close(dialog)
-                            end
                             update_buttons()
                         end,
                     },
@@ -1022,9 +1068,6 @@ function M.show_cloud_book_dialog(callback, plugin)
         if search_keyword ~= "" then
             search_keyword = ""
             refresh_book_list()
-            if dialog then
-                UIManager:close(dialog)
-            end
             update_buttons()
         end
     end
