@@ -29,6 +29,7 @@ local ConfirmBox = require("ui/widget/confirmbox")
 local ButtonDialog = require("ui/widget/buttondialog")
 local Device = require("device")
 local Screen = Device.screen
+local Input = Device.input
 local _ = require("gettext")
 local utils = dofile(_plugin_dir .. "utils.lua")
 
@@ -669,6 +670,14 @@ function M.show_cloud_book_dialog(callback, plugin)
     local show_search_dialog
     local clear_search
     local go_to_page
+    -- When toggling a checkbox rebuilds the dialog, advance the cursor to the
+    -- next list row (so serial selection flows downward) instead of jumping
+    -- back to the top. Set just before such a rebuild; consumed by update_buttons.
+    local keep_focus
+    -- True only while a hardware-key activation (Press on the focused row) is
+    -- being handled, so a checkbox callback can tell key activation from a
+    -- touch/mouse tap (which must never advance the cursor or paginate).
+    local from_key_press = false
 
     -- Turn to another page of the list (clamped). Rebuilds the dialog, as the
     -- list is paginated by recreating the ButtonDialog. Returns true if the page
@@ -733,6 +742,32 @@ function M.show_cloud_book_dialog(callback, plugin)
                     callback = function()
                         selected[book.name] = not selected[book.name]
                         if dialog then
+                            -- Advance the cursor downward so serial checking
+                            -- flows: to the next book on the page; if the last
+                            -- book of a non-final page was toggled, to the first
+                            -- book of the next page; on the very last book of the
+                            -- last page, stay put. Book rows are located by index
+                            -- (start_idx/end_idx, plus the optional search summary
+                            -- row) so the cursor never lands on the non-actionable
+                            -- "Page x/y" row.
+                            -- Gated on from_key_press: only a hardware-key
+                            -- activation advances/paginates. A touch/mouse tap
+                            -- (even on a hybrid device, even on the already
+                            -- focused row) just toggles the checkbox.
+                            if from_key_press then
+                                local first_book_y = (search_keyword ~= "" and 2 or 1)
+                                local this_y = first_book_y + (i - start_idx)
+                                local last_book_y = first_book_y + (end_idx - start_idx)
+                                local total_pages = math.ceil(#books / items_per_page)
+                                if this_y < last_book_y then
+                                    keep_focus = { x = 1, y = this_y + 1 }
+                                elseif current_page < total_pages then
+                                    current_page = current_page + 1
+                                    keep_focus = { x = 1, y = first_book_y }
+                                else
+                                    keep_focus = { x = 1, y = this_y }
+                                end
+                            end
                             UIManager:close(dialog)
                             update_buttons()
                         end
@@ -887,7 +922,9 @@ function M.show_cloud_book_dialog(callback, plugin)
             title_align = "center",
             buttons = buttons,
             width = math.floor(Screen:getWidth() * 0.85),
+            selected = keep_focus, -- restore cursor row after an in-list rebuild (nil = default top)
         }
+        keep_focus = nil
 
         -- Non-touch navigation (D-pad devices): in this single-column list the
         -- horizontal arrows have no in-row neighbour to move to, so they do
@@ -909,6 +946,24 @@ function M.show_cloud_book_dialog(callback, plugin)
         end
 
         UIManager:show(dialog)
+        -- Make the cursor position visible on D-pad devices (and restore the
+        -- highlight on the row we advanced to after an in-list rebuild).
+        if Device:hasDPad() then
+            dialog:refocusWidget()
+            -- After an in-place reinit the ScrollableContainer is recreated with
+            -- its scroll offset back at the top; refocusWidget() only restyles
+            -- the focus, while the auto-scroll-to-focus lives in onFocusMove
+            -- (not run on reinit). Nudge it (next tick, once geometry is laid
+            -- out) so the focused row is scrolled into view if it would be
+            -- off-screen.
+            if dialog.cropping_widget then
+                UIManager:nextTick(function()
+                    if dialog.onFocusMove then
+                        dialog:onFocusMove({ 0, 0 })
+                    end
+                end)
+            end
+        end
     end
 
     show_search_dialog = function()
