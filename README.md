@@ -120,6 +120,8 @@ cloudlibrary (renamed) adds new features and fixes bugs based on the v0.22 versi
 22. Optimized update channel: Added three update sources options - GitHub (Latest), GitHub (Pre-release), Gitee (Latest)  (v1.4)
 23. Added changelog.lua to track version history (v1.4.1)
 24. Optimize plugin module loading path and fix naming conflict with other plugins (v1.4.1)
+25. Fix: support all KOReader formats in book validation (v1.4.2)
+26. Non-touch navigation for the cloud book dialog (v1.4.2)
 
 #### Contributing
 
