@@ -70,7 +70,7 @@ CloudLibraryPlugin.default_settings = {
 
 
 function CloudLibraryPlugin:init()
-    self.VERSION = "v1.4.1"
+    self.VERSION = "v1.4.2"
     logger.info("CloudLibrary: init started, version " .. self.VERSION)
     
     self.ui.menu:registerToMainMenu(self)
