@@ -50,4 +50,8 @@ return {
     "Added changelog.lua to track version history",
     "Optimize plugin module loading path and fix naming conflict with other plugins",
 },
+["1.4.2"] = {
+    "Fix: support all KOReader formats in book validation (including .fb2.zip)",
+    "Non-touch navigation for the cloud book dialog",
+},
 }
