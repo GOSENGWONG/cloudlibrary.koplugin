@@ -185,4 +185,33 @@ function M.create_progress_dialog(title, subtitle, progress_max)
     return progress_dialog, update_progress, close_progress
 end
 
+-- ============================================================
+-- 检查文件路径是否在排除目录中
+-- ============================================================
+function M.is_path_excluded(file_path, exclude_dirs)
+    if not file_path or not exclude_dirs or #exclude_dirs == 0 then
+        return false
+    end
+    
+    local function normalize_path(path)
+        path = path:gsub("\\", "/")  
+        path = path:gsub("/+$", "")   
+        return path
+    end
+    
+    local normalized_file = normalize_path(file_path)
+    
+    for _, exclude_dir in ipairs(exclude_dirs) do
+        local normalized_exclude = normalize_path(exclude_dir)
+        if normalized_file:find(normalized_exclude, 1, true) == 1 then
+            local next_char = normalized_file:sub(#normalized_exclude + 1, #normalized_exclude + 1)
+            if next_char == "/" or next_char == "" then
+                return true
+            end
+        end
+    end
+    
+    return false
+end
+
 return M
