@@ -66,6 +66,7 @@ CloudLibraryPlugin.default_settings = {
     book_cloud_address = nil,
     book_cloud_username = nil,
     book_cloud_password = nil,
+    exclude_dirs = {},
 }
 
 
@@ -384,6 +385,53 @@ function CloudLibraryPlugin:chooseBookCloudDir()
     UIManager:show(sync_service)
 end
 
+function CloudLibraryPlugin:addExcludeDir()
+    local utils = dofile(_plugin_dir .. "utils.lua")
+    local DownloadMgr = require("ui/downloadmgr")
+    local current_dir = nil
+    
+    DownloadMgr:new{
+        title = _("Select Directory to Exclude from Auto Sync"),
+        onConfirm = function(path)
+            if path and path ~= "" then
+                local exclude_dirs = self.settings.exclude_dirs or {}
+                -- 检查是否已存在
+                for _, existing in ipairs(exclude_dirs) do
+                    if existing == path then
+                        utils.show_msg(_("This directory is already in the exclude list"))
+                        return
+                    end
+                end
+                table.insert(exclude_dirs, path)
+                self.settings.exclude_dirs = exclude_dirs
+                G_reader_settings:saveSetting(self.plugin_id, self.settings)
+                utils.show_msg(string.format(_("Excluded directory added: %s"), path))
+            end
+        end,
+    }:chooseDir(current_dir)
+end
+
+function CloudLibraryPlugin:removeExcludeDir(index)
+    local utils = dofile(_plugin_dir .. "utils.lua")
+    local exclude_dirs = self.settings.exclude_dirs or {}
+    if index < 1 or index > #exclude_dirs then
+        return
+    end
+    
+    local removed_dir = exclude_dirs[index]
+    UIManager:show(ConfirmBox:new{
+        text = string.format(_("Remove \"%s\" from exclude list?"), removed_dir),
+        ok_text = _("Remove"),
+        cancel_text = _("Cancel"),
+        ok_callback = function()
+            table.remove(exclude_dirs, index)
+            self.settings.exclude_dirs = exclude_dirs
+            G_reader_settings:saveSetting(self.plugin_id, self.settings)
+            utils.show_msg(_("Excluded directory removed"))
+        end
+    })
+end
+
 function CloudLibraryPlugin:confirmClearCloudLog()
     UIManager:show(ConfirmBox:new{
         text = _("Are you sure you want to clear all sync logs from the cloud?\n\nThis will not affect local logs, but other devices will not be able to sync cleared records."),
@@ -593,6 +641,55 @@ function CloudLibraryPlugin:buildBookSyncMenu()
     }
 end
 
+function CloudLibraryPlugin:buildExcludeDirMenu()
+    local utils = dofile(_plugin_dir .. "utils.lua")
+    local exclude_dirs = self.settings.exclude_dirs or {}
+    
+    local items = {}
+    
+    -- 添加新目录按钮
+    table.insert(items, {
+        text = _("+ Add Directory to Exclude"),
+        callback = function()
+            self:addExcludeDir()
+        end,
+        separator = (#exclude_dirs > 0) and true or false,
+    })
+    
+    -- 显示已排除的目录列表
+    for i, dir in ipairs(exclude_dirs) do
+        local display_dir = dir
+        -- 截断长路径以便显示
+        if #display_dir > 40 then
+            display_dir = "..." .. display_dir:sub(-37)
+        end
+        table.insert(items, {
+            text_func = function()
+                return string.format("  %s", display_dir)
+            end,
+            enabled = false,
+        })
+        table.insert(items, {
+            text = string.format("    ✕ %s", _("Remove")),
+            callback = function()
+                self:removeExcludeDir(i)
+            end,
+        })
+        if i < #exclude_dirs then
+            table.insert(items, { text = "", enabled = false })
+        end
+    end
+    
+    if #exclude_dirs == 0 then
+        table.insert(items, {
+            text = _("  (No directories excluded)"),
+            enabled = false,
+        })
+    end
+    
+    return items
+end
+
 function CloudLibraryPlugin:buildAutoSyncMenu()
     local utils = dofile(_plugin_dir .. "utils.lua")
     return {
@@ -678,6 +775,11 @@ function CloudLibraryPlugin:buildAutoSyncMenu()
                     end,
                 },
             },
+        },
+        {
+            text = _("Auto Sync Exclude Directories"),
+            sub_item_table = self:buildExcludeDirMenu(),
+            separator = true,
         },
         {
             text = _("Show notification on auto sync"),
