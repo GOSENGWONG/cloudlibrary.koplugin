@@ -69,6 +69,22 @@ function AutoSync:sync(document, is_upload, source)
         return 
     end
     
+    -- ===== 先获取文件路径 =====
+    local file = document.file
+    if not file or not lfs.attributes(file, "mode") then
+        return
+    end
+
+    -- ===== 新增：检查是否在排除目录中 =====
+    local exclude_dirs = self.settings.exclude_dirs or {}
+    if utils.is_path_excluded(file, exclude_dirs) then
+        if self.settings.auto_sync_notify then
+            local book_title = document.title or (document.file and document.file:match("([^/]+)$"):gsub("%.[^%.]+$", "")) or "book"
+            self:showNotification(book_title, _("Auto sync skipped (directory excluded)"), nil, false)
+        end
+        return
+    end
+    
     local NetworkMgr = require("ui/network/manager")
     if not NetworkMgr:isOnline() then
         if self.settings.auto_sync_notify then
@@ -125,11 +141,6 @@ function AutoSync:sync(document, is_upload, source)
         if not self:shouldDownload(source) then
             return
         end
-    end
-    
-    local file = document.file
-    if not file or not lfs.attributes(file, "mode") then
-        return
     end
     
     local source_desc = ""
