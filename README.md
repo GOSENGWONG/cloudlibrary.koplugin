@@ -65,6 +65,7 @@ Used for quickly switching between Overwrite/Merge modes (does not affect the au
 1. Disabled by default. Check the specific options below to enable the corresponding mode.
 2. **Auto upload backup**: Automatically upload metadata to overwrite the cloud when editing annotations, closing a book, or when the device goes to sleep. (Multiple triggers can be enabled at the same time, but not recommended. It is advisable to choose either closing the book or device sleep for auto backup.)
 3. **Auto download update**: Automatically download metadata from the cloud to update locally when opening a book (overwrite/merge modes available)
+4. Added Auto Sync Exclude Directories feature (v1.4.3): Books in specified directories will not be included in auto sync (multiple directories can be added or removed)
 - **Notes:**
   - Auto sync only syncs the metadata of the book at the triggered moment, not all books continuously.  
   Example: If 「Auto upload on close」 is enabled, no matter which book or where it is located, whenever a book is closed, the device will automatically upload that book's metadata, overwriting the same-named metadata file in the cloud directory.
@@ -122,6 +123,8 @@ cloudlibrary (renamed) adds new features and fixes bugs based on the v0.22 versi
 24. Optimize plugin module loading path and fix naming conflict with other plugins (v1.4.1)
 25. Fix: support all KOReader formats in book validation (v1.4.2)
 26. Non-touch navigation for the cloud book dialog (v1.4.2)
+27. Added Auto Sync Exclude Directories feature (v1.4.3)
+28. Optimized gesture registration: merged reader/filemanager paired gestures into unified general gestures (v1.4.3)
 
 #### Contributing
 
