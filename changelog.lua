@@ -54,4 +54,8 @@ return {
     "Fix: support all KOReader formats in book validation (including .fb2.zip)",
     "Non-touch navigation for the cloud book dialog",
 },
+["1.4.3"] = {
+    "Added Auto Sync Exclude Directories feature",
+    "Optimized gesture registration: merged reader/filemanager paired gestures into unified general gestures",
+},
 }
