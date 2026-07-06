@@ -266,6 +266,9 @@ msgstr "已关闭：打开书籍时自动下载（合并更新）"
 msgid "Auto Sync Exclude Directories"
 msgstr "自动同步排除目录"
 
+msgid "Auto Sync Exclude Directories (%d)"
+msgstr "自动同步排除目录（%d）"
+
 msgid "+ Add Directory to Exclude"
 msgstr "+ 添加排除目录"
 
@@ -297,7 +300,7 @@ msgid "Auto update skipped (directory excluded)"
 msgstr "自动更新已跳过（目录被排除）"
 
 msgid "Cloud Library - Exclude Directories"
-msgstr "云端书库 - 排除目录"
+msgstr "云端书库-自动同步排除目录"
 
 msgid "Show notification on auto sync"
 msgstr "自动同步时显示通知"
