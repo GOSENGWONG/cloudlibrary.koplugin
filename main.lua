@@ -66,12 +66,13 @@ CloudLibraryPlugin.default_settings = {
     book_cloud_address = nil,
     book_cloud_username = nil,
     book_cloud_password = nil,
+    exclude_dirs = {},
 }
 
 
 function CloudLibraryPlugin:init()
-    self.VERSION = "v1.4.2"
-    logger.info("CloudLibrary: init started, version " .. self.VERSION)
+    local meta = dofile(_plugin_dir .. "_meta.lua")
+    self.VERSION = meta.version or "v1.0.0"
     
     self.ui.menu:registerToMainMenu(self)
     
@@ -152,7 +153,7 @@ function CloudLibraryPlugin:buildMenuItems()
             end,
         },
         {
-            text = _("Updates") .. "  (" .. _("Author") .. ": gytwo  " .. _("Current version") .. ": " .. self.VERSION .. ")",
+            text = _("Updates") .. "  (" .. _("Current version") .. ": " .. self.VERSION .. ")",
             callback = function()
                 local update = dofile(_plugin_dir .. "update.lua")
                 update.check_for_updates(false, self)
@@ -384,6 +385,53 @@ function CloudLibraryPlugin:chooseBookCloudDir()
     UIManager:show(sync_service)
 end
 
+function CloudLibraryPlugin:addExcludeDir()
+    local utils = dofile(_plugin_dir .. "utils.lua")
+    local DownloadMgr = require("ui/downloadmgr")
+    local current_dir = nil
+    
+    DownloadMgr:new{
+        title = _("Select Directory to Exclude from Auto Sync"),
+        onConfirm = function(path)
+            if path and path ~= "" then
+                local exclude_dirs = self.settings.exclude_dirs or {}
+                -- 检查是否已存在
+                for _, existing in ipairs(exclude_dirs) do
+                    if existing == path then
+                        utils.show_msg(_("This directory is already in the exclude list"))
+                        return
+                    end
+                end
+                table.insert(exclude_dirs, path)
+                self.settings.exclude_dirs = exclude_dirs
+                G_reader_settings:saveSetting(self.plugin_id, self.settings)
+                utils.show_msg(string.format(_("Excluded directory added: %s"), path))
+            end
+        end,
+    }:chooseDir(current_dir)
+end
+
+function CloudLibraryPlugin:removeExcludeDir(index)
+    local utils = dofile(_plugin_dir .. "utils.lua")
+    local exclude_dirs = self.settings.exclude_dirs or {}
+    if index < 1 or index > #exclude_dirs then
+        return
+    end
+    
+    local removed_dir = exclude_dirs[index]
+    UIManager:show(ConfirmBox:new{
+        text = string.format(_("Remove \"%s\" from exclude list?"), removed_dir),
+        ok_text = _("Remove"),
+        cancel_text = _("Cancel"),
+        ok_callback = function()
+            table.remove(exclude_dirs, index)
+            self.settings.exclude_dirs = exclude_dirs
+            G_reader_settings:saveSetting(self.plugin_id, self.settings)
+            utils.show_msg(_("Excluded directory removed"))
+        end
+    })
+end
+
 function CloudLibraryPlugin:confirmClearCloudLog()
     UIManager:show(ConfirmBox:new{
         text = _("Are you sure you want to clear all sync logs from the cloud?\n\nThis will not affect local logs, but other devices will not be able to sync cleared records."),
@@ -593,6 +641,55 @@ function CloudLibraryPlugin:buildBookSyncMenu()
     }
 end
 
+function CloudLibraryPlugin:buildExcludeDirMenu()
+    local utils = dofile(_plugin_dir .. "utils.lua")
+    local exclude_dirs = self.settings.exclude_dirs or {}
+    
+    local items = {}
+    
+    -- 添加新目录按钮
+    table.insert(items, {
+        text = _("+ Add Directory to Exclude"),
+        callback = function()
+            self:addExcludeDir()
+        end,
+        separator = (#exclude_dirs > 0) and true or false,
+    })
+    
+    -- 显示已排除的目录列表
+    for i, dir in ipairs(exclude_dirs) do
+        local display_dir = dir
+        -- 截断长路径以便显示
+        if #display_dir > 40 then
+            display_dir = "..." .. display_dir:sub(-37)
+        end
+        table.insert(items, {
+            text_func = function()
+                return string.format("  %s", display_dir)
+            end,
+            enabled = false,
+        })
+        table.insert(items, {
+            text = string.format("    ✕ %s", _("Remove")),
+            callback = function()
+                self:removeExcludeDir(i)
+            end,
+        })
+        if i < #exclude_dirs then
+            table.insert(items, { text = "", enabled = false })
+        end
+    end
+    
+    if #exclude_dirs == 0 then
+        table.insert(items, {
+            text = _("  (No directories excluded)"),
+            enabled = false,
+        })
+    end
+    
+    return items
+end
+
 function CloudLibraryPlugin:buildAutoSyncMenu()
     local utils = dofile(_plugin_dir .. "utils.lua")
     return {
@@ -678,6 +775,11 @@ function CloudLibraryPlugin:buildAutoSyncMenu()
                     end,
                 },
             },
+        },
+        {
+            text = _("Auto Sync Exclude Directories"),
+            sub_item_table = self:buildExcludeDirMenu(),
+            separator = true,
         },
         {
             text = _("Show notification on auto sync"),
@@ -873,34 +975,40 @@ function CloudLibraryPlugin:showPluginInfo()
 end
 
 function CloudLibraryPlugin:onDispatcherRegisterActions()
-    Dispatcher:registerAction("cloudlibrary_reader", {
+    -- ============================================================
+    -- 通用手势（阅读器 + 文件管理器）
+    -- ============================================================
+    Dispatcher:registerAction("cloudlibrary_quick_actions", {
         category = "none",
-        event = "CloudLibraryReader",
+        event = "CloudLibraryQuickActions",
         title = _("Cloud Library - Quick Actions"),
-        reader = true,
-    })
-    
-    Dispatcher:registerAction("cloudlibrary_filemanager", {
-        category = "none",
-        event = "CloudLibraryFileManager",
-        title = _("Cloud Library - Quick Actions"),
-        filemanager = true,
+        general = true,
     })
 
-    Dispatcher:registerAction("cloudlibrary_settings_reader", {
+    Dispatcher:registerAction("cloudlibrary_quick_settings", {
         category = "none",
-        event = "CloudLibrarySettingsReader",
+        event = "CloudLibraryQuickSettings",
         title = _("Cloud Library - Quick Settings"),
-        reader = true,
+        general = true,
     })
 
-    Dispatcher:registerAction("cloudlibrary_settings_filemanager", {
+    Dispatcher:registerAction("cloudlibrary_autosync", {
         category = "none",
-        event = "CloudLibrarySettingsFileManager",
-        title = _("Cloud Library - Quick Settings"),
-        filemanager = true,
+        event = "CloudLibraryAutoSync",
+        title = _("Cloud Library - Worry-Free Sync Mode"),
+        general = true,
     })
 
+    Dispatcher:registerAction("cloudlibrary_exclude_dirs", {
+        category = "none",
+        event = "CloudLibraryExcludeDirs",
+        title = _("Cloud Library - Exclude Directories"),
+        general = true,
+    })
+
+    -- ============================================================
+    -- 仅阅读器手势（需要打开书籍）
+    -- ============================================================
     Dispatcher:registerAction("cloudlibrary_upload_current", {
         category = "none",
         event = "CloudLibraryUploadCurrent",
@@ -914,21 +1022,10 @@ function CloudLibraryPlugin:onDispatcherRegisterActions()
         title = _("Cloud Library - Download current book metadata (Smart mode)"),
         reader = true,
     })
-    
-    Dispatcher:registerAction("cloudlibrary_autosync_reader", {
-        category = "none",
-        event = "CloudLibraryAutoSyncReader",
-        title = _("Cloud Library - Worry-Free Sync Mode"),
-        reader = true,
-    })
 
-    Dispatcher:registerAction("cloudlibrary_autosync_filemanager", {
-        category = "none",
-        event = "CloudLibraryAutoSyncFileManager",
-        title = _("Cloud Library - Worry-Free Sync Mode"),
-        filemanager = true,
-    })
-
+    -- ============================================================
+    -- 仅文件管理器手势（需要选择文件）
+    -- ============================================================
     Dispatcher:registerAction("cloudlibrary_batch_upload_metadata", {
         category = "none",
         event = "CloudLibraryBatchUploadMetadata",
@@ -958,12 +1055,30 @@ function CloudLibraryPlugin:onDispatcherRegisterActions()
     })
 end
 
-function CloudLibraryPlugin:onCloudLibraryReader()
-    self:showSyncDialog("reader")
+-- ============================================================
+-- 通用手势处理函数
+-- ============================================================
+
+function CloudLibraryPlugin:onCloudLibraryQuickActions()
+    local context
+    if self.ui and self.ui.document then
+        context = "reader"
+    else
+        context = "filemanager"
+    end
+    self:showSyncDialog(context)
 end
 
-function CloudLibraryPlugin:onCloudLibraryFileManager()
-    self:showSyncDialog("filemanager")
+function CloudLibraryPlugin:onCloudLibraryQuickSettings()
+    self:showSettingsDialog()
+end
+
+function CloudLibraryPlugin:onCloudLibraryAutoSync()
+    self:toggleAutoSyncQuick()
+end
+
+function CloudLibraryPlugin:onCloudLibraryExcludeDirs()
+    self:showExcludeDirDialog()
 end
 
 function CloudLibraryPlugin:showSyncDialog(context)
@@ -1087,15 +1202,7 @@ function CloudLibraryPlugin:onCloudLibraryDownloadCurrent()
     end
 end
 
-function CloudLibraryPlugin:onCloudLibrarySettingsReader()
-    self:showSettingsDialog("reader")
-end
-
-function CloudLibraryPlugin:onCloudLibrarySettingsFileManager()
-    self:showSettingsDialog("filemanager")
-end
-
-function CloudLibraryPlugin:showSettingsDialog(context)
+function CloudLibraryPlugin:showSettingsDialog()
     local ButtonDialog = require("ui/widget/buttondialog")
     local UIManager = require("ui/uimanager")
     local Screen = Device.screen
@@ -1108,7 +1215,7 @@ function CloudLibraryPlugin:showSettingsDialog(context)
             UIManager:close(self_ref._current_settings_dialog)
             self_ref._current_settings_dialog = nil
         end
-        self_ref:showSettingsDialog(context)
+        self_ref:showSettingsDialog()
     end
     
     local buttons = {}
@@ -1330,6 +1437,27 @@ function CloudLibraryPlugin:showSettingsDialog(context)
     
     table.insert(buttons, {})
     
+    -- 自动同步排除目录
+    local exclude_count = #(self.settings.exclude_dirs or {})
+    local exclude_text = (exclude_count > 0) and 
+        string.format(_("Auto Sync Exclude Directories (%d)"), exclude_count) or
+        _("Auto Sync Exclude Directories")
+    
+    table.insert(buttons, {
+        {
+            text = exclude_text,
+            callback = function()
+                if self_ref._current_settings_dialog then
+                    UIManager:close(self_ref._current_settings_dialog)
+                    self_ref._current_settings_dialog = nil
+                end
+                self_ref:showExcludeDirDialog()
+            end
+        }
+    })
+    
+    table.insert(buttons, {}) 
+
     table.insert(buttons, {
         {
             text_func = function()
@@ -1456,7 +1584,7 @@ function CloudLibraryPlugin:showSettingsDialog(context)
     
     table.insert(buttons, {
         {
-            text = _("Updates") .. "  (" .. _("Author") .. ": gytwo  " .. _("Current version") .. ": " .. self.VERSION .. ")",
+            text = _("Updates") .. "  (" .. _("Current version") .. ": " .. self.VERSION .. ")",
             callback = function()
                 local update = dofile(_plugin_dir .. "update.lua")
                 update.check_for_updates(false, self)
@@ -1688,6 +1816,110 @@ function CloudLibraryPlugin:showManualDownloadModeDialog()
     UIManager:show(dialog)
 end
 
+function CloudLibraryPlugin:showExcludeDirDialog()
+    local ButtonDialog = require("ui/widget/buttondialog")
+    local UIManager = require("ui/uimanager")
+    local Screen = Device.screen
+    local _ = require("gettext")
+    
+    local self_ref = self
+    local exclude_dirs = self.settings.exclude_dirs or {}
+    
+    local function rebuildDialog()
+        if self_ref._exclude_dir_dialog then
+            UIManager:close(self_ref._exclude_dir_dialog)
+            self_ref._exclude_dir_dialog = nil
+        end
+        self_ref:showExcludeDirDialog()
+    end
+    
+    local buttons = {}
+    
+    -- 添加新目录按钮
+    table.insert(buttons, {
+        {
+            text = _("+ Add Directory to Exclude"),
+            callback = function()
+                if self_ref._exclude_dir_dialog then
+                    UIManager:close(self_ref._exclude_dir_dialog)
+                    self_ref._exclude_dir_dialog = nil
+                end
+                self_ref:addExcludeDir()
+            end
+        }
+    })
+    
+    table.insert(buttons, {})
+    
+    -- 显示已排除的目录列表
+    if #exclude_dirs == 0 then
+        table.insert(buttons, {
+            {
+                text = _("  (No directories excluded)"),
+                enabled = false,
+                alignment = "center",
+            }
+        })
+    else
+        for i, dir in ipairs(exclude_dirs) do
+            local display_dir = dir
+            if #display_dir > 35 then
+                display_dir = "..." .. display_dir:sub(-32)
+            end
+            table.insert(buttons, {
+                {
+                    text = string.format("  %s", display_dir),
+                    enabled = false,
+                }
+            })
+            table.insert(buttons, {
+                {
+                    text = string.format("    ✕ %s", _("Remove")),
+                    callback = function()
+                        self_ref:removeExcludeDir(i)
+                        if self_ref._exclude_dir_dialog then
+                            UIManager:close(self_ref._exclude_dir_dialog)
+                            self_ref._exclude_dir_dialog = nil
+                        end
+                        UIManager:scheduleIn(0.1, function()
+                            self_ref:showExcludeDirDialog()
+                        end)
+                    end
+                }
+            })
+            if i < #exclude_dirs then
+                table.insert(buttons, {})
+            end
+        end
+    end
+    
+    table.insert(buttons, {})
+    
+    -- 返回按钮
+    table.insert(buttons, {
+        {
+            text = _("Back"),
+            callback = function()
+                if self_ref._exclude_dir_dialog then
+                    UIManager:close(self_ref._exclude_dir_dialog)
+                    self_ref._exclude_dir_dialog = nil
+                end
+            end
+        }
+    })
+    
+    local dialog = ButtonDialog:new{
+        title = _("Auto Sync Exclude Directories"),
+        title_align = "center",
+        buttons = buttons,
+        width = math.floor(Screen:getWidth() * 0.75),
+        max_height = math.floor(Screen:getHeight() * 0.6),
+    }
+    
+    self_ref._exclude_dir_dialog = dialog
+    UIManager:show(dialog)
+end
+
 function CloudLibraryPlugin:onCloudLibraryBatchUploadMetadata()
     self.manual_sync:batchSyncWithFMSelection(true, false)
 end
@@ -1704,14 +1936,6 @@ end
 
 function CloudLibraryPlugin:onCloudLibraryBatchDownloadBooks()
     self:batchDownloadBooks()
-end
-
-function CloudLibraryPlugin:onCloudLibraryAutoSyncReader()
-    self:toggleAutoSyncQuick()
-end
-
-function CloudLibraryPlugin:onCloudLibraryAutoSyncFileManager()
-    self:toggleAutoSyncQuick()
 end
 
 function CloudLibraryPlugin:toggleAutoSyncQuick()

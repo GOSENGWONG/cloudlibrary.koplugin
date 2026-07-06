@@ -192,8 +192,8 @@ msgstr "书籍使用「标题_作者」格式命名"
 msgid "Upload current book metadata"
 msgstr "上传当前书籍元数据"
 
-msgid "Download current book metadata"
-msgstr "下载当前书籍元数据"
+msgid "Download current book metadata (%s)"
+msgstr "下载当前书籍元数据（%s）"
 
 msgid "Batch upload selected books metadata"
 msgstr "批量上传选中书籍元数据"
@@ -262,6 +262,45 @@ msgstr "已开启：打开书籍时自动下载（合并更新）"
 
 msgid "Disabled: Auto download when opening book (Merge)"
 msgstr "已关闭：打开书籍时自动下载（合并更新）"
+
+msgid "Auto Sync Exclude Directories"
+msgstr "自动同步排除目录"
+
+msgid "Auto Sync Exclude Directories (%d)"
+msgstr "自动同步排除目录（%d）"
+
+msgid "+ Add Directory to Exclude"
+msgstr "+ 添加排除目录"
+
+msgid "Select Directory to Exclude from Auto Sync"
+msgstr "选择要排除自动同步的目录"
+
+msgid "This directory is already in the exclude list"
+msgstr "该目录已在排除列表中"
+
+msgid "Excluded directory added: %s"
+msgstr "已添加排除目录：%s"
+
+msgid "Remove \"%s\" from exclude list?"
+msgstr "从排除列表中移除 \"%s\"？"
+
+msgid "Remove"
+msgstr "移除"
+
+msgid "Excluded directory removed"
+msgstr "已移除排除目录"
+
+msgid "  (No directories excluded)"
+msgstr "  （暂无排除目录）"
+
+msgid "Auto sync skipped (directory excluded)"
+msgstr "自动同步已跳过（目录被排除）"
+
+msgid "Auto update skipped (directory excluded)"
+msgstr "自动更新已跳过（目录被排除）"
+
+msgid "Cloud Library - Exclude Directories"
+msgstr "云端书库-自动同步排除目录"
 
 msgid "Show notification on auto sync"
 msgstr "自动同步时显示通知"
