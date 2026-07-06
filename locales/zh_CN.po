@@ -192,8 +192,8 @@ msgstr "书籍使用「标题_作者」格式命名"
 msgid "Upload current book metadata"
 msgstr "上传当前书籍元数据"
 
-msgid "Download current book metadata"
-msgstr "下载当前书籍元数据"
+msgid "Download current book metadata (%s)"
+msgstr "下载当前书籍元数据（%s）"
 
 msgid "Batch upload selected books metadata"
 msgstr "批量上传选中书籍元数据"
@@ -295,6 +295,9 @@ msgstr "自动同步已跳过（目录被排除）"
 
 msgid "Auto update skipped (directory excluded)"
 msgstr "自动更新已跳过（目录被排除）"
+
+msgid "Cloud Library - Exclude Directories"
+msgstr "云端书库 - 排除目录"
 
 msgid "Show notification on auto sync"
 msgstr "自动同步时显示通知"
