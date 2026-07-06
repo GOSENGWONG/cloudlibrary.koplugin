@@ -71,7 +71,8 @@ CloudLibraryPlugin.default_settings = {
 
 
 function CloudLibraryPlugin:init()
-    self.VERSION = "v1.4.3"
+    local meta = dofile(_plugin_dir .. "_meta.lua")
+    self.VERSION = meta.version or "v1.0.0"
     
     self.ui.menu:registerToMainMenu(self)
     
@@ -152,7 +153,7 @@ function CloudLibraryPlugin:buildMenuItems()
             end,
         },
         {
-            text = _("Updates") .. "  (" .. _("Author") .. ": gytwo  " .. _("Current version") .. ": " .. self.VERSION .. ")",
+            text = _("Updates") .. "  (" .. _("Current version") .. ": " .. self.VERSION .. ")",
             callback = function()
                 local update = dofile(_plugin_dir .. "update.lua")
                 update.check_for_updates(false, self)
@@ -1583,7 +1584,7 @@ function CloudLibraryPlugin:showSettingsDialog()
     
     table.insert(buttons, {
         {
-            text = _("Updates") .. "  (" .. _("Author") .. ": gytwo  " .. _("Current version") .. ": " .. self.VERSION .. ")",
+            text = _("Updates") .. "  (" .. _("Current version") .. ": " .. self.VERSION .. ")",
             callback = function()
                 local update = dofile(_plugin_dir .. "update.lua")
                 update.check_for_updates(false, self)
