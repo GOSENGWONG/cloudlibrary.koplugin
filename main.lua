@@ -388,23 +388,23 @@ end
 function CloudLibraryPlugin:addExcludeDir()
     local utils = dofile(_plugin_dir .. "utils.lua")
     local DownloadMgr = require("ui/downloadmgr")
+    local self_ref = self
     local current_dir = nil
     
     DownloadMgr:new{
         title = _("Select Directory to Exclude from Auto Sync"),
         onConfirm = function(path)
             if path and path ~= "" then
-                local exclude_dirs = self.settings.exclude_dirs or {}
-                -- 检查是否已存在
-                for _, existing in ipairs(exclude_dirs) do
+                local exclude_dirs = self_ref.settings.exclude_dirs or {}
+                for idx, existing in ipairs(exclude_dirs) do
                     if existing == path then
                         utils.show_msg(_("This directory is already in the exclude list"))
                         return
                     end
                 end
                 table.insert(exclude_dirs, path)
-                self.settings.exclude_dirs = exclude_dirs
-                G_reader_settings:saveSetting(self.plugin_id, self.settings)
+                self_ref.settings.exclude_dirs = exclude_dirs
+                G_reader_settings:saveSetting(self_ref.plugin_id, self_ref.settings)
                 utils.show_msg(string.format(_("Excluded directory added: %s"), path))
             end
         end,
@@ -434,7 +434,6 @@ function CloudLibraryPlugin:removeExcludeDir(index)
             table.remove(exclude_dirs, index)
             self_ref.settings.exclude_dirs = exclude_dirs
             G_reader_settings:saveSetting(self_ref.plugin_id, self_ref.settings)
-            self_ref:showExcludeDirDialog()
         end,
     })
 end
@@ -784,8 +783,17 @@ function CloudLibraryPlugin:buildAutoSyncMenu()
             },
         },
         {
-            text = _("Auto Sync Exclude Directories"),
-            sub_item_table = self:buildExcludeDirMenu(),
+            text_func = function()
+                local count = #(self.settings.exclude_dirs or {})
+                if count > 0 then
+                    return string.format(_("Auto Sync Exclude Directories (%d)"), count)
+                else
+                    return _("Auto Sync Exclude Directories")
+                end
+            end,
+            callback = function()
+                self:showExcludeDirDialog()
+            end,
             separator = true,
         },
         {
