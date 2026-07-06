@@ -419,16 +419,23 @@ function CloudLibraryPlugin:removeExcludeDir(index)
     end
     
     local removed_dir = exclude_dirs[index]
+    local self_ref = self
+    
+    if self_ref._exclude_dir_dialog then
+        UIManager:close(self_ref._exclude_dir_dialog)
+        self_ref._exclude_dir_dialog = nil
+    end
+    
     UIManager:show(ConfirmBox:new{
         text = string.format(_("Remove \"%s\" from exclude list?"), removed_dir),
         ok_text = _("Remove"),
         cancel_text = _("Cancel"),
         ok_callback = function()
             table.remove(exclude_dirs, index)
-            self.settings.exclude_dirs = exclude_dirs
-            G_reader_settings:saveSetting(self.plugin_id, self.settings)
-            utils.show_msg(_("Excluded directory removed"))
-        end
+            self_ref.settings.exclude_dirs = exclude_dirs
+            G_reader_settings:saveSetting(self_ref.plugin_id, self_ref.settings)
+            self_ref:showExcludeDirDialog()
+        end,
     })
 end
 
@@ -1877,13 +1884,6 @@ function CloudLibraryPlugin:showExcludeDirDialog()
                     text = string.format("    ✕ %s", _("Remove")),
                     callback = function()
                         self_ref:removeExcludeDir(i)
-                        if self_ref._exclude_dir_dialog then
-                            UIManager:close(self_ref._exclude_dir_dialog)
-                            self_ref._exclude_dir_dialog = nil
-                        end
-                        UIManager:scheduleIn(0.1, function()
-                            self_ref:showExcludeDirDialog()
-                        end)
                     end
                 }
             })
@@ -1899,6 +1899,17 @@ function CloudLibraryPlugin:showExcludeDirDialog()
     table.insert(buttons, {
         {
             text = _("Back"),
+            callback = function()
+                if self_ref._exclude_dir_dialog then
+                    UIManager:close(self_ref._exclude_dir_dialog)
+                    self_ref._exclude_dir_dialog = nil
+                end
+                self_ref:showSettingsDialog()
+            end
+        },
+        {
+            text = _("Cancel"),
+            id = "close",
             callback = function()
                 if self_ref._exclude_dir_dialog then
                     UIManager:close(self_ref._exclude_dir_dialog)
