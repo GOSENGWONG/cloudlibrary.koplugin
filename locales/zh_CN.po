@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: cloudlibrary v1.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-01 00:00+0000\n"
-"PO-Revision-Date: 2024-01-01 00:00+0000\n"
+"PO-Revision-Date: 2026-07-16 10:24+0800\n"
 "Last-Translator: \n"
 "Language-Team: Chinese (Simplified)\n"
 "Language: zh_CN\n"
@@ -11,1280 +11,1415 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 3.9\n"
 
-# _meta.lua
+#: _meta.lua:4 main.lua:121
 msgid "Cloud Library"
 msgstr "云端书库"
 
+#: _meta.lua:6
 msgid "Sync books and metadata (annotations, reading progress, etc.) between devices."
-msgstr "在设备间同步书籍及元数据（书籍标注、阅读进度等）。"
+msgstr "在设备间同步书籍及元数据 (书籍标注、阅读进度等)。"
 
-# main.lua - Main menu
-msgid "Settings"
-msgstr "设置"
-
-msgid "Metadata Sync"
-msgstr "元数据同步"
-
-msgid "Book Sync"
-msgstr "书籍同步"
-
-msgid "View Sync Log"
-msgstr "查看同步记录"
-
-msgid "Plugin Info"
-msgstr "插件说明"
-
-msgid "Check for Updates"
-msgstr "检查更新"
-
-msgid "Last sync: %1"
-msgstr "最后同步：%1"
-
-# Settings menu
-msgid "Cloud Directory"
-msgstr "云端目录"
-
-msgid "Cloud Naming Rules"
-msgstr "云端命名规则"
-
-msgid "Book Download Directory: "
-msgstr "书籍下载目录: "
-
-msgid "Set Book Download Directory"
-msgstr "设置书籍下载目录"
-
-msgid "Metadata Download Mode (Manual)"
-msgstr "元数据下载模式（手动）"
-
-msgid "Metadata Download Mode (Manual): "
-msgstr "元数据下载模式（手动）："
-
-msgid "Overwrite"
-msgstr "覆盖更新"
-
-msgid "Merge"
-msgstr "合并更新"
-
-msgid "Metadata download mode (manual): Overwrite"
-msgstr "元数据下载模式（手动）：覆盖更新"
-
-msgid "Metadata download mode (manual): Merge"
-msgstr "元数据下载模式（手动）：合并更新"
-
-msgid "Auto Sync Settings (Metadata Only)"
-msgstr "自动同步设置（仅元数据）"
-
-msgid "Additional JSON Backup"
-msgstr "额外备份JSON文件"
-
-msgid "Original format (default)"
-msgstr "保持原有格式（默认）"
-
-msgid "NoteMarkData format"
-msgstr "使用NoteMarkData格式"
-
-msgid "Additional JSON Backup (Original format)"
-msgstr "额外备份JSON文件（原有格式）"
-
-msgid "Additional JSON Backup (NoteMarkData format)"
-msgstr "额外备份JSON文件（NoteMarkData格式）"
-
-msgid "When enabled: Convert annotations to NoteMarkData format"
-msgstr "开启后：将标注转换为NoteMarkData格式"
-
-msgid "Enabled: Original format"
-msgstr "已开启：原始格式"
-
-msgid "Disabled: Additional JSON backup"
-msgstr "已关闭额外备份JSON"
-
-msgid "Enabled: NoteMarkData format"
-msgstr "已开启：NoteMarkData格式"
-
-msgid "Keep local document settings when overwriting"
-msgstr "覆盖更新时保留本地文档设置"
-
-msgid "When enabled: Keep local font, margin settings when overwriting, only sync annotations and progress"
-msgstr "开启后：覆盖更新时保留本地的字体、边距等设置，仅同步标注和进度"
-
-msgid "Enabled: Keep local document settings when overwriting"
-msgstr "已开启：覆盖更新时保留本地文档设置"
-
-msgid "Disabled: Fully use cloud file when overwriting"
-msgstr "已关闭：覆盖更新时完全使用云端文件"
-
-msgid "Enable Cloud Sync Log"
-msgstr "开启记录云同步"
-
-msgid "When enabled: Automatically upload local sync logs to cloud or merge cloud logs locally"
-msgstr "开启后：自动上传本地记录至云端或从云端合并同步记录至本地"
-
-msgid "Cloud sync log enabled"
-msgstr "已开启记录云同步"
-
-msgid "Cloud sync log disabled"
-msgstr "已关闭记录云同步"
-
-msgid "Clear Cloud Sync Log"
-msgstr "清空云端同步记录"
-
-msgid "Clear all sync logs stored in the cloud, local logs will not be affected"
-msgstr "清空云端存储的所有同步记录，不会影响本地记录"
-
-# Cloud directory menu
-msgid "Metadata Cloud Directory: "
-msgstr "元数据云端目录: "
-
-msgid "Set Metadata Cloud Directory"
-msgstr "设置元数据云端目录"
-
-msgid "Book Cloud Directory: "
-msgstr "书籍云端目录: "
-
-msgid "Set Book Cloud Directory (defaults to metadata directory)"
-msgstr "设置书籍云端目录（默认与元数据相同）"
-
-# Naming rules menu
-msgid "Metadata Naming Rules"
-msgstr "元数据命名方式"
-
-msgid "Book Naming Rules"
-msgstr "书籍命名方式"
-
-msgid "Metadata Naming Rules: "
-msgstr "元数据命名方式："
-
-msgid "Book Naming Rules: "
-msgstr "书籍命名方式："
-
-msgid "Use Filename"
-msgstr "使用文件名"
-
-msgid "Use Book Title (default)"
-msgstr "使用书籍标题（默认）"
-
-msgid "Use Book Title"
-msgstr "使用书籍标题"
-
-msgid "Use Title_Author"
-msgstr "使用标题_作者"
-
-msgid "Metadata naming: Filename"
-msgstr "元数据使用文件名命名"
-
-msgid "Metadata naming: Book title"
-msgstr "元数据使用书籍标题命名"
-
-msgid "Metadata naming: Title_Author"
-msgstr "元数据使用「标题_作者」格式命名"
-
-msgid "Book naming: Filename"
-msgstr "书籍使用文件名命名"
-
-msgid "Book naming: Book title"
-msgstr "书籍使用书籍标题命名"
-
-msgid "Book naming: Title_Author"
-msgstr "书籍使用「标题_作者」格式命名"
-
-# Metadata sync menu
-msgid "Upload current book metadata"
-msgstr "上传当前书籍元数据"
-
-msgid "Download current book metadata (%s)"
-msgstr "下载当前书籍元数据（%s）"
-
-msgid "Batch upload selected books metadata"
-msgstr "批量上传选中书籍元数据"
-
-msgid "Batch download selected books metadata"
-msgstr "批量下载选中书籍元数据"
-
-msgid "Batch download selected books metadata (%s)"
-msgstr "批量下载选中书籍元数据（%s）"
-
-# Book sync menu
-msgid "Batch upload selected books"
-msgstr "批量上传选中书籍"
-
-msgid "Batch download/delete cloud books"
-msgstr "批量下载/删除云端书籍"
-
-# Auto sync menu
-msgid "Auto Upload Backup"
-msgstr "自动上传备份"
-
-msgid "Auto upload when editing annotations"
-msgstr "编辑标注时自动上传"
-
-msgid "Auto upload when closing book"
-msgstr "关闭书籍时自动上传"
-
-msgid "Auto upload when device suspends"
-msgstr "设备休眠时自动上传"
-
-msgid "Enabled: Auto upload when editing annotations"
-msgstr "已开启：编辑标注时自动上传"
-
-msgid "Disabled: Auto upload when editing annotations"
-msgstr "已关闭：编辑标注时自动上传"
-
-msgid "Enabled: Auto upload when closing book"
-msgstr "已开启：关闭书籍时自动上传"
-
-msgid "Disabled: Auto upload when closing book"
-msgstr "已关闭：关闭书籍时自动上传"
-
-msgid "Enabled: Auto upload when device suspends"
-msgstr "已开启：休眠时自动上传"
-
-msgid "Disabled: Auto upload when device suspends"
-msgstr "已关闭：休眠时自动上传"
-
-msgid "Auto Download Update"
-msgstr "自动下载更新"
-
-msgid "Auto download when opening book (Overwrite)"
-msgstr "打开书籍时自动下载（覆盖更新）"
-
-msgid "Auto download when opening book (Merge)"
-msgstr "打开书籍时自动下载（合并更新）"
-
-msgid "Enabled: Auto download when opening book (Overwrite)"
-msgstr "已开启：打开书籍时自动下载（覆盖更新）"
-
-msgid "Disabled: Auto download when opening book (Overwrite)"
-msgstr "已关闭：打开书籍时自动下载（覆盖更新）"
-
-msgid "Enabled: Auto download when opening book (Merge)"
-msgstr "已开启：打开书籍时自动下载（合并更新）"
-
-msgid "Disabled: Auto download when opening book (Merge)"
-msgstr "已关闭：打开书籍时自动下载（合并更新）"
-
-msgid "Auto Sync Exclude Directories"
-msgstr "自动同步排除目录"
-
-msgid "Auto Sync Exclude Directories (%d)"
-msgstr "自动同步排除目录（%d）"
-
-msgid "+ Add Directory to Exclude"
-msgstr "+ 添加排除目录"
-
-msgid "Select Directory to Exclude from Auto Sync"
-msgstr "选择要排除自动同步的目录"
-
-msgid "This directory is already in the exclude list"
-msgstr "该目录已在排除列表中"
-
-msgid "Excluded directory added: %s"
-msgstr "已添加排除目录：%s"
-
-msgid "Remove \"%s\" from exclude list?"
-msgstr "从排除列表中移除 \"%s\"？"
-
-msgid "Remove"
-msgstr "移除"
-
-msgid "Excluded directory removed"
-msgstr "已移除排除目录"
-
-msgid "  (No directories excluded)"
-msgstr "  （暂无排除目录）"
-
+#: auto_sync.lua:83
 msgid "Auto sync skipped (directory excluded)"
-msgstr "自动同步已跳过（目录被排除）"
+msgstr "自动同步已跳过 (目录被排除)"
 
-msgid "Auto update skipped (directory excluded)"
-msgstr "自动更新已跳过（目录被排除）"
-
-msgid "Cloud Library - Exclude Directories"
-msgstr "云端书库-自动同步排除目录"
-
-msgid "Show notification on auto sync"
-msgstr "自动同步时显示通知"
-
-msgid "Enabled: Auto sync notifications"
-msgstr "已开启：自动同步通知"
-
-msgid "Disabled: Auto sync notifications"
-msgstr "已关闭：自动同步通知"
-
-# Gesture shortcuts - Quick settings dialog
-msgid "Cloud Library - Quick Actions"
-msgstr "云端书库-快捷操作"
-
-msgid "Cloud Library - Quick Settings"
-msgstr "云端书库-快捷设置"
-
-msgid "Cloud Library - Worry-Free Sync Mode"
-msgstr "云端书库-元数据省心同步模式"
-
-msgid "Cloud Library - Upload current book metadata"
-msgstr "云端书库-上传当前书籍元数据"
-
-msgid "Cloud Library - Download current book metadata (Smart mode)"
-msgstr "云端书库-下载当前书籍元数据（智能模式）"
-
-msgid "Cloud Library - Batch upload selected books metadata"
-msgstr "云端书库-批量上传选中书籍元数据"
-
-msgid "Cloud Library - Batch download metadata (Smart mode)"
-msgstr "云端书库-批量下载元数据（智能模式）"
-
-msgid "Cloud Library - Batch upload selected books"
-msgstr "云端书库-批量上传选中书籍"
-
-msgid "Cloud Library - Batch download/delete cloud books"
-msgstr "云端书库-批量下载/删除云端书籍"
-
-# Notifications
-msgid "Cloud Library: All auto sync disabled"
-msgstr "云端书库: 已关闭所有元数据自动同步"
-
-msgid "Cloud Library: Worry-Free Sync Mode enabled (auto upload on close/suspend + auto download merge on open)"
-msgstr "云端书库: 已开启元数据省心同步模式 (关闭书籍/设备休眠自动上传 + 打开书籍自动合并更新)"
-
-# Confirm dialogs
-msgid "Are you sure you want to clear all sync logs from the cloud?\n\nThis will not affect local logs, but other devices will not be able to sync cleared records."
-msgstr "确定要清空云端的同步记录吗？\n\n此操作不会影响本地的同步记录，但其他设备将无法同步到已清空的记录。"
-
-msgid "Clear"
-msgstr "清空"
-
-msgid "Cancel"
-msgstr "取消"
-
-msgid "No network connection, cannot clear"
-msgstr "无网络连接，无法清空"
-
-msgid "Clearing cloud sync logs..."
-msgstr "正在清空云端同步记录..."
-
-msgid "Cloud sync logs cleared"
-msgstr "云端同步记录已清空"
-
-msgid "Clear failed: "
-msgstr "清空失败: "
-
-msgid "Select Book Download Directory"
-msgstr "选择书籍下载目录"
-
-msgid "Book download directory set: %s"
-msgstr "本地下载目录已设置: %s"
-
-msgid "Please set book download directory in settings first"
-msgstr "请先在设置中设置书籍下载目录"
-
-msgid "Are you sure you want to download %d book(s)?"
-msgstr "确定要下载 %d 本书籍吗？"
-
-msgid "Download"
-msgstr "下载"
-
-# Sync log
-msgid "No sync records"
-msgstr "没有同步记录"
-
-msgid "Sync log file path: %s\n\n"
-msgstr "同步记录文件路径: %s\n\n"
-
-msgid "Find"
-msgstr "查找"
-
-msgid "Copy"
-msgstr "复制"
-
-msgid "Sync log copied to clipboard"
-msgstr "同步记录已复制到剪贴板"
-
-msgid "Sync log saved to %s"
-msgstr "同步记录已保存到 %s"
-
-msgid "Copy failed"
-msgstr "复制失败"
-
-msgid "Are you sure you want to clear all sync records?"
-msgstr "确定要清空所有同步记录吗？"
-
-msgid "Sync records cleared"
-msgstr "同步记录已清空"
-
-msgid "Sync Log"
-msgstr "同步记录"
-
-# Plugin info
-msgid "README.md file not found"
-msgstr "未找到 README.md 文件"
-
-msgid "Cloud Library Plugin Info"
-msgstr "云端书库 插件说明"
-
-# Back button
-msgid "Back"
-msgstr "返回"
-
-# Auto sync notifications (from auto_sync.lua)
-msgid "Auto backup failed (Network disconnected)"
-msgstr "自动备份失败(网络未连接)"
-
-msgid "Auto backup failed (Cloud storage not configured)"
-msgstr "自动备份失败(未配置云存储)"
-
-msgid "Auto backup failed (Cloud directory not set)"
-msgstr "自动备份失败(未设置云端目录)"
-
-msgid "Auto backup failed (Unsupported cloud service)"
-msgstr "自动备份失败(不支持的云服务)"
-
-msgid "Auto backup failed (Local metadata not found)"
-msgstr "自动备份失败(未找到本地元数据)"
-
-msgid "Auto backup failed (%s)"
-msgstr "自动备份失败 (%s)"
-
-msgid "Auto backup successful"
-msgstr "自动备份成功"
-
-msgid "Auto update failed (Network disconnected)"
-msgstr "自动更新失败(网络未连接)"
-
-msgid "Auto update failed (Cloud storage not configured)"
-msgstr "自动更新失败(未配置云存储)"
-
-msgid "Auto update failed (Cloud directory not set)"
-msgstr "自动更新失败(未设置云端目录)"
-
-msgid "Auto update failed (Unsupported cloud service)"
-msgstr "自动更新失败(不支持的云服务)"
-
-msgid "Auto update failed (Cloud file not found)"
-msgstr "自动更新失败(云端未找到文件)"
-
-msgid "Auto update failed (%s)"
-msgstr "自动更新失败 (%s)"
-
-msgid "Auto update successful"
-msgstr "自动更新成功"
-
-# Manual sync messages (from manual_sync.lua)
-msgid "Please open a book first"
-msgstr "请先打开一本书"
-
-msgid "Local metadata file not found"
-msgstr "找不到当前书籍的元数据文件"
-
-msgid "No network connection, cannot sync"
-msgstr "网络未连接，无法同步"
-
-msgid "Cloud storage service not configured, please configure in settings first"
-msgstr "未配置云存储服务，请先在设置中配置"
-
-msgid "Cloud directory not set, please configure in cloud directory settings"
-msgstr "未设置云端目录，请先在云端目录中配置"
-
-msgid "Unsupported cloud storage type, please use WebDAV or Dropbox"
-msgstr "不支持的云服务类型，请使用 WebDAV 或 Dropbox"
-
-msgid "Overwrite update completed, this book will be reopened"
-msgstr "覆盖更新完成，即将重新打开当前书籍"
-
-msgid "Confirm download"
-msgstr "确认下载"
-
-msgid "This operation requires reopening the current book to override update metadata. Continue?"
-msgstr "此操作需要重新打开当前书籍以覆盖更新元数据，是否继续？"
-
-msgid "Continue"
-msgstr "继续"
-
-msgid "Confirm merge download"
-msgstr "确认合并下载"
-
-msgid "This operation requires reopening the current book to merge update metadata. Continue?"
-msgstr "此操作需要重新打开当前书籍以合并更新元数据，是否继续？"
-
-msgid "Upload successful"
-msgstr "上传成功"
-
-msgid "Download successful (Overwrite)"
-msgstr "下载成功(覆盖更新)"
-
-msgid "Download successful (Merge)"
-msgstr "下载成功(合并更新)"
-
-msgid "Upload failed: "
-msgstr "上传失败: "
-
-msgid "Download failed: "
-msgstr "下载失败: "
-
-msgid "Please select books to sync, then tap"
-msgstr "请勾选要同步的书籍，再点击"
-
-msgid "Batch upload metadata"
-msgstr "批量上传元数据"
-
-msgid "Batch download metadata - Overwrite"
-msgstr "批量下载元数据-覆盖更新"
-
-msgid "Batch download metadata - Merge"
-msgstr "批量下载元数据-合并更新"
-
-msgid "Unable to get file manager instance"
-msgstr "无法获取文件管理器实例"
-
-msgid "Please select the books to"
-msgstr "请勾选要"
-
-msgid "No files selected"
-msgstr "没有选中任何文件"
-
-msgid "No valid book files selected"
-msgstr "没有选中任何有效的书籍文件"
-
-# Cloud book dialog (from book_sync.lua)
-msgid "Cloud book list"
-msgstr "云端书籍列表"
-
-msgid "Select books to download/delete"
-msgstr "请选择要下载/删除的书籍"
-
-msgid "Select All"
-msgstr "全选"
-
-msgid "Deselect All"
-msgstr "取消全选"
-
-msgid "Search"
-msgstr "搜索"
-
-msgid "Clear Search"
-msgstr "清除搜索"
-
-msgid "Delete"
-msgstr "删除"
-
-msgid "No books found"
-msgstr "没有找到匹配的书籍"
-
-msgid "Previous Page"
-msgstr "上一页"
-
-msgid "Next Page"
-msgstr "下一页"
-
-msgid "Page"
-msgstr "第"
-
-msgid "of"
-msgstr "/"
-
-msgid "books"
-msgstr "本"
-
-msgid "Confirm delete"
-msgstr "确认删除"
-
-msgid "Are you sure you want to delete %d books from cloud? This action cannot be undone!"
-msgstr "确定要删除云端的 %d 本书籍吗？此操作不可恢复！"
-
-msgid "No books selected"
-msgstr "未选中任何书籍"
-
-msgid "Download completed: %d success, %d failed, %d skipped"
-msgstr "下载完成: %d 成功, %d 失败, %d 跳过"
-
-msgid "Upload completed: %d success, %d failed"
-msgstr "上传完成: %d 成功, %d 失败"
-
-msgid "Delete completed: %d success, %d failed"
-msgstr "删除完成: %d 成功, %d 失败"
-
-msgid "Upload failed details"
-msgstr "上传失败详情"
-
-msgid "Download failed details"
-msgstr "下载失败详情"
-
-msgid "Delete failed details"
-msgstr "删除失败详情"
-
-msgid "Skipped details"
-msgstr "跳过详情"
-
-# Update module
-msgid "No network connection, cannot check for updates"
-msgstr "无网络连接，无法检查更新"
-
-msgid "Checking for updates..."
-msgstr "正在检查更新..."
-
-msgid "Check for updates failed, please try again later"
-msgstr "检查更新失败，请稍后重试"
-
-msgid "New version found: %s\nCurrent version: %s\n\nDownload and install update?"
-msgstr "发现新版本: %s\n当前版本: %s\n\n是否下载并安装更新？"
-
-msgid "Update"
-msgstr "检查更新"
-
-msgid "Current version is up to date (%s)\n\nDowngrade to a previous version?"
-msgstr "当前已是最新版本 (%s)\n\n是否需要回退到之前的版本？"
-
-msgid "Downgrade"
-msgstr "回退"
-
-msgid "Getting version list..."
-msgstr "正在获取版本列表..."
-
-msgid "Failed to get version list"
-msgstr "获取版本列表失败"
-
-msgid "Select version to download"
-msgstr "选择要下载的版本"
-
-msgid "Current version: %s (re-download)"
-msgstr "当前版本: %s (重新下载)"
-
-msgid "Downgrade to %s"
-msgstr "回退到 %s"
-
-msgid "Update package download URL not found"
-msgstr "未找到更新包下载地址"
-
-msgid "Downloading update..."
-msgstr "正在下载更新..."
-
-msgid "Download failed, please try again later"
-msgstr "下载失败，请稍后重试"
-
-msgid "Installing update..."
-msgstr "正在安装更新..."
-
-msgid "Update installed successfully. KOReader needs to restart to apply changes. Restart now?"
-msgstr "更新安装完成，需要重启 KOReader 才能生效。是否立即重启？"
-
-msgid "Restart"
-msgstr "重启"
-
-msgid "Automatic installation failed, please manually extract"
-msgstr "自动安装失败，请手动解压"
-
-msgid "Installation failed, please update manually"
-msgstr "安装失败，请手动更新"
-
-msgid "Author"
-msgstr "作者"
-
-msgid "Current version"
-msgstr "当前版本"
-
-# auto_sync.lua
+#: auto_sync.lua:92
 msgid "Auto sync failed (Network disconnected)"
-msgstr "自动同步失败(网络未连接)"
+msgstr "自动同步失败 (网络未连接)"
 
+#: auto_sync.lua:102
 msgid "Auto sync failed (Cloud storage not configured)"
-msgstr "自动同步失败(未配置云存储)"
+msgstr "自动同步失败 (未配置云存储)"
 
+#: auto_sync.lua:110
 msgid "Auto sync failed (Cloud directory not set)"
-msgstr "自动同步失败(未设置云端目录)"
+msgstr "自动同步失败 (未设置云端目录)"
 
+#: auto_sync.lua:119
 msgid "Auto sync failed (Unsupported cloud service)"
-msgstr "自动同步失败(不支持的云服务)"
+msgstr "自动同步失败 (不支持的云服务)"
 
+#: auto_sync.lua:148
 msgid "Edit annotation"
 msgstr "编辑标注"
 
+#: auto_sync.lua:150
 msgid "Close book"
 msgstr "关闭书籍"
 
+#: auto_sync.lua:152
 msgid "Device suspend"
 msgstr "设备休眠"
 
+#: auto_sync.lua:154 hooks.lua:230 hooks.lua:231 hooks.lua:235
 msgid "Open book"
 msgstr "打开书籍"
 
+#: auto_sync.lua:179 manual_sync.lua:57 manual_sync.lua:120 manual_sync.lua:608
+#: remote.lua:65
 msgid "Local metadata file not found"
-msgstr "未找到本地元数据文件"
+msgstr "找不到当前书籍的元数据文件"
 
+#: auto_sync.lua:180 manual_sync.lua:609 remote.lua:66
 msgid "Please open the book first to generate metadata file"
 msgstr "请先打开该书生成元数据文件"
 
+#: auto_sync.lua:183 auto_sync.lua:200 auto_sync.lua:205 auto_sync.lua:220
+#: auto_sync.lua:225 auto_sync.lua:276 auto_sync.lua:279 hooks.lua:230
+msgid "Auto sync"
+msgstr "自动同步"
+
+#: auto_sync.lua:183
 msgid "Failed"
 msgstr "失败"
 
-msgid "Upload successful"
-msgstr "上传成功"
-
-msgid "Upload failed"
-msgstr "上传失败"
-
-msgid "Download successful"
-msgstr "下载成功"
-
-msgid "Download failed"
-msgstr "下载失败"
-
-msgid "Sync time: %s"
-msgstr "同步时间: %s"
-
-msgid "Sync time:"
-msgstr "同步时间:"
-
-msgid "Device: %s"
-msgstr "操作设备: %s"
-
-msgid "Device ID: %s"
-msgstr "设备ID: %s"
-
-msgid "Operation type: %s"
-msgstr "操作类型: %s"
-
-msgid "[Success] ✓ %s"
-msgstr "【成功】✓ %s"
-
-msgid "[Failed] ✗ %s"
-msgstr "【失败】✗ %s"
-
-msgid "Reason: %s"
-msgstr "原因: %s"
-
-msgid "Solution: %s"
-msgstr "解决方案: %s"
-
-msgid "Unknown error"
-msgstr "未知错误"
-
-# book_sync.lua
-msgid "Book file does not exist"
-msgstr "书籍文件不存在"
-
-msgid "Unsupported file format"
-msgstr "不支持的文件格式"
-
-msgid "Cloud storage service not configured"
-msgstr "未配置云存储服务"
-
-msgid "Device not connected to network"
-msgstr "设备未连接到网络"
-
-msgid "Unsupported cloud storage type"
-msgstr "不支持的云服务类型"
-
-msgid "Cannot build cloud path"
-msgstr "无法构建云端路径"
-
-msgid "Cloud storage authentication failed, please reconfigure"
-msgstr "云存储认证失败，请重新配置"
-
-msgid "Upload failed (HTTP %s)"
-msgstr "上传失败 (HTTP %s)"
-
-msgid "Please set book download directory in settings first"
-msgstr "请先在设置中设置书籍下载目录"
-
-msgid "Cannot create download directory"
-msgstr "无法创建下载目录"
-
-msgid "Downloading: %s"
-msgstr "正在下载: %s"
-
-msgid "✓ Download successful: %s"
-msgstr "✓ 下载成功: %s"
-
-msgid "Cloud file does not exist"
-msgstr "云端文件不存在"
-
-msgid "Cloud storage authentication failed"
-msgstr "云存储认证失败"
-
-msgid "Download failed (HTTP %s)"
-msgstr "下载失败 (HTTP %s)"
-
-msgid "✓ Delete successful: %s"
-msgstr "✓ 删除成功: %s"
-
-msgid "Delete failed (HTTP %s)"
-msgstr "删除失败 (HTTP %s)"
-
-msgid "Book sync"
-msgstr "书籍同步"
-
-msgid "Batch upload"
-msgstr "批量上传"
-
-msgid "Batch download"
-msgstr "批量下载"
-
-msgid "Batch delete"
-msgstr "批量删除"
-
-msgid "[Success] (%d books)"
-msgstr "【成功】( %d 本)"
-
-msgid "  None"
-msgstr "  无"
-
-msgid "[Skipped] (%d books)"
-msgstr "【跳过】( %d 本)"
-
-msgid "[Failed] (%d books)"
-msgstr "【失败】( %d 本)"
-
-msgid "[Failure reason %d] %s"
-msgstr "【失败原因 %d】%s"
-
-msgid "No books found in cloud"
-msgstr "云端没有找到书籍文件"
-
-msgid "Search: \"%s\" (%d books found)"
-msgstr "搜索: \"%s\" (找到 %d 本)"
-
-msgid "No books found"
-msgstr "没有找到匹配的书籍"
-
-msgid "◀ Previous Page"
-msgstr "◀ 上一页"
-
-msgid "Page %d/%d (%d books)"
-msgstr "第 %d/%d 页 (%d本)"
-
-msgid "Next Page ▶"
-msgstr "下一页 ▶"
-
-msgid "Select All"
-msgstr "全选"
-
-msgid "Deselect All"
-msgstr "取消全选"
-
-msgid "Search"
-msgstr "搜索"
-
-msgid "Clear Search"
-msgstr "清除搜索"
-
-msgid "Delete (%d)"
-msgstr "删除 (%d)"
-
-msgid "Are you sure you want to delete %d book(s) from the cloud?\nThis action cannot be undone!"
-msgstr "确定要删除云端的 %d 本书籍吗？\n此操作不可恢复！"
-
-msgid "Delete"
-msgstr "删除"
-
-msgid "Cancel"
-msgstr "取消"
-
-msgid "No books selected"
-msgstr "未选中任何书籍"
-
-msgid "Download (%d)"
-msgstr "下载 (%d)"
-
-msgid "Select books to download/delete (%d selected)"
-msgstr "请选择要下载/删除的书籍 (已选 %d 本)"
-
-msgid "Search books"
-msgstr "搜索书籍"
-
-msgid "Enter book title keyword"
-msgstr "输入书名关键字"
-
-msgid "Unknown"
-msgstr "未知"
-
-msgid "Upload completed: %d success, %d failed"
-msgstr "上传完成: %d 成功, %d 失败"
-
-msgid "Upload failed details"
-msgstr "上传失败详情"
-
-msgid "All books"
-msgstr "所有书籍"
-
-msgid "Download directory not set"
-msgstr "下载目录未设置"
-
-msgid "Local file with same name already exists"
-msgstr "本地已存在同名文件"
-
-msgid "Download completed: %d success, %d failed, %d skipped"
-msgstr "下载完成: %d 成功, %d 失败, %d 跳过"
-
-msgid "Download failed details"
-msgstr "下载失败详情"
-
-msgid "Delete completed: %d success, %d failed"
-msgstr "删除完成: %d 成功, %d 失败"
-
-msgid "Delete failed details"
-msgstr "删除失败详情"
-
-msgid "Failure details:\n\n"
-msgstr "失败详情:\n\n"
-
-msgid "Skipped details:\n\n"
-msgstr "跳过详情:\n\n"
-
-msgid "%d book(s) were skipped because local files with the same name already exist:\n\n"
-msgstr "共 %d 本书籍因本地已存在同名文件而被跳过:\n\n"
-
-msgid "\nHint: To re-download, please delete or rename the local files first"
-msgstr "\n提示: 如需重新下载，请先删除或重命名本地同名文件"
-
-msgid "No network connection, cannot get cloud book list"
-msgstr "网络未连接，无法获取云端列表"
-
-msgid "No network connection, cannot upload"
-msgstr "网络未连接，无法上传"
-
-msgid "upload"
-msgstr "上传"
-
-msgid "Batch upload selected books"
-msgstr "批量上传选中书籍"
-
-msgid "Please select books to %s, then tap \"%s\""
-msgstr "请勾选要%s的书籍，再点击「%s」"
-
-msgid "Unable to get file manager instance"
-msgstr "无法获取文件管理器实例"
-
-msgid "No valid book files selected"
-msgstr "没有选中任何有效的书籍文件"
-
-msgid "Upload %d book(s) to cloud"
-msgstr "将上传 %d 本书籍到云端"
-
-msgid "Continue"
-msgstr "继续"
-
-# manual_sync.lua
-msgid "Please open a book first"
-msgstr "请先打开一本书"
-
-msgid "No network connection, cannot sync"
-msgstr "网络未连接，无法同步"
-
-msgid "Please configure in settings first"
-msgstr "请先在设置中配置"
-
-msgid "Please configure in cloud directory settings"
-msgstr "请先在云端目录中配置"
-
-msgid "Please use WebDAV or Dropbox"
-msgstr "请使用 WebDAV 或 Dropbox"
-
-msgid "✓ Upload successful"
-msgstr "✓ 上传成功"
-
-msgid "✓ Download successful (Overwrite)"
-msgstr "✓ 下载成功(覆盖更新)"
-
+#: auto_sync.lua:184
+msgid "Sync failed"
+msgstr "同步失败"
+
+#: auto_sync.lua:200 auto_sync.lua:205 auto_sync.lua:220 auto_sync.lua:225
+#: auto_sync.lua:276 auto_sync.lua:279 hooks.lua:230 manual_sync.lua:205
+#: manual_sync.lua:286 manual_sync.lua:372 manual_sync.lua:578
+#: manual_sync.lua:580 manual_sync.lua:659 manual_sync.lua:661
+#: manual_sync.lua:703 manual_sync.lua:705
 msgid "Metadata sync"
 msgstr "元数据同步"
 
-msgid "Single upload"
-msgstr "单本上传"
+#: auto_sync.lua:200
+msgid "Upload successful"
+msgstr "上传成功"
 
-msgid "Overwrite cloud"
-msgstr "覆盖云端"
+#: auto_sync.lua:201
+msgid "Auto backup successful"
+msgstr "自动备份成功"
 
-msgid "Single download"
-msgstr "单本下载"
+#: auto_sync.lua:205
+msgid "Upload failed"
+msgstr "上传失败"
 
-msgid "Overwrite"
-msgstr "覆盖更新"
+#: auto_sync.lua:206
+msgid "Auto backup failed (%s)"
+msgstr "自动备份失败 (%s)"
 
-msgid "✗ Upload failed: %s"
-msgstr "✗ 上传失败: %s"
-
-msgid "✗ Download failed: %s"
-msgstr "✗ 下载失败: %s"
-
-msgid "✓ Download successful (Merge)"
-msgstr "✓ 下载成功(合并更新)"
-
+#: auto_sync.lua:210 auto_sync.lua:278 hooks.lua:220 main.lua:223 main.lua:597
+#: main.lua:622 main.lua:1102 main.lua:1153 main.lua:1353 main.lua:1800
+#: manual_sync.lua:372 manual_sync.lua:567 manual_sync.lua:580
+#: manual_sync.lua:661 manual_sync.lua:705
 msgid "Merge"
 msgstr "合并更新"
 
-msgid "✗ Download failed (Merge): %s"
-msgstr "✗ 下载失败(合并更新): %s"
+#: auto_sync.lua:210 auto_sync.lua:278 hooks.lua:220 main.lua:212 main.lua:589
+#: main.lua:616 main.lua:1102 main.lua:1153 main.lua:1353 main.lua:1786
+#: manual_sync.lua:286 manual_sync.lua:567 manual_sync.lua:580
+#: manual_sync.lua:661 manual_sync.lua:705
+msgid "Overwrite"
+msgstr "覆盖更新"
 
-msgid "download"
+#: auto_sync.lua:220 hooks.lua:230
+msgid "Download successful"
+msgstr "下载成功"
+
+#: auto_sync.lua:221 hooks.lua:232
+msgid "Auto update successful"
+msgstr "自动更新成功"
+
+#: auto_sync.lua:225 update.lua:425
+msgid "Download failed"
+msgstr "下载失败"
+
+#: auto_sync.lua:226 hooks.lua:236
+msgid "Auto update failed (%s)"
+msgstr "自动更新失败 (%s)"
+
+#: auto_sync.lua:276
+msgid "Upload"
+msgstr "上传"
+
+#: auto_sync.lua:279
+msgid "Download"
 msgstr "下载"
 
-msgid "Batch upload metadata"
-msgstr "批量上传元数据"
+#: auto_sync.lua:284 book_sync.lua:193 manual_sync.lua:666 manual_sync.lua:725
+msgid "Sync time: %s"
+msgstr "同步时间：%s"
 
-msgid "Batch download metadata - Merge"
-msgstr "批量下载元数据-合并更新"
+#: auto_sync.lua:285 book_sync.lua:194 manual_sync.lua:667 manual_sync.lua:726
+msgid "Device: %s"
+msgstr "操作设备：%s"
 
-msgid "Batch download metadata - Overwrite"
-msgstr "批量下载元数据-覆盖更新"
+#: auto_sync.lua:286 book_sync.lua:195 manual_sync.lua:668 manual_sync.lua:727
+msgid "Device ID: %s"
+msgstr "设备标识：%s"
 
-msgid "download-merge"
-msgstr "下载-合并更新"
+#: auto_sync.lua:287 book_sync.lua:196 manual_sync.lua:669 manual_sync.lua:728
+msgid "Operation type: %s"
+msgstr "操作类型：%s"
 
-msgid "download-overwrite"
-msgstr "下载-覆盖更新"
+#: auto_sync.lua:291 manual_sync.lua:673
+msgid "[Success] ✓ %s"
+msgstr "【成功】✓ %s"
 
-msgid "%s metadata for %d book(s)"
-msgstr "将%s %d 本书籍的元数据"
+#: auto_sync.lua:293 manual_sync.lua:675
+msgid "[Failed] ✗ %s"
+msgstr "【失败】✗ %s"
 
-msgid "No files selected"
-msgstr "没有选中任何文件"
+#: auto_sync.lua:294 manual_sync.lua:676
+msgid "Reason: %s"
+msgstr "原因：%s"
 
-msgid "Metadata upload completed: %d success, %d failed"
-msgstr "元数据上传完成: %d 成功, %d 失败"
+#: auto_sync.lua:294 book_sync.lua:224 book_sync.lua:1285 manual_sync.lua:676
+#: remote.lua:78 remote.lua:82
+msgid "Unknown error"
+msgstr "未知错误"
 
-msgid "Metadata download completed (%s): %d success, %d failed"
-msgstr "元数据下载完成-%s: %d 成功, %d 失败"
+#: auto_sync.lua:296 manual_sync.lua:750
+msgid "Solution: %s"
+msgstr "解决方案：%s"
 
+#: book_sync.lua:184 book_sync.lua:186 book_sync.lua:188 book_sync.lua:539
+#: book_sync.lua:1081 book_sync.lua:1188
+msgid "Book sync"
+msgstr "书籍同步"
+
+#: book_sync.lua:184 book_sync.lua:1081 manual_sync.lua:578 manual_sync.lua:703
 msgid "Batch upload"
 msgstr "批量上传"
 
+#: book_sync.lua:186 book_sync.lua:1188 manual_sync.lua:580 manual_sync.lua:705
 msgid "Batch download"
 msgstr "批量下载"
 
+#: book_sync.lua:188 book_sync.lua:539
+msgid "Batch delete"
+msgstr "批量删除"
+
+#: book_sync.lua:199 manual_sync.lua:731
 msgid "[Success] (%d books)"
 msgstr "【成功】( %d 本)"
 
+#: book_sync.lua:206 book_sync.lua:240 manual_sync.lua:738 manual_sync.lua:758
+msgid "  None"
+msgstr "  无"
+
+#: book_sync.lua:211
+msgid "[Skipped] (%d books)"
+msgstr "【跳过】( %d 本)"
+
+#: book_sync.lua:219 manual_sync.lua:742
 msgid "[Failed] (%d books)"
 msgstr "【失败】( %d 本)"
 
-msgid "Failed books:"
-msgstr "失败书籍:"
+#: book_sync.lua:233 manual_sync.lua:748
+msgid "[Failure reason %d] %s"
+msgstr "【失败原因 %d】%s"
 
-# remote.lua
-msgid "Please turn on Wi-Fi and try again"
-msgstr "请打开 Wi-Fi 后重试"
+#: book_sync.lua:269
+msgid "Book file does not exist"
+msgstr "书籍文件不存在"
 
-msgid "Please configure cloud storage in settings"
-msgstr "请在设置中配置云存储"
+#: book_sync.lua:274
+msgid "Unsupported file format"
+msgstr "不支持的文件格式"
 
-msgid "Please check username/password"
-msgstr "请检查用户名/密码"
+#: book_sync.lua:280 book_sync.lua:359 book_sync.lua:420 book_sync.lua:584
+#: remote.lua:53 sync_log.lua:313
+msgid "Cloud storage service not configured"
+msgstr "未配置云存储服务"
 
-msgid "Please upload the book first"
-msgstr "请先上传该书"
+#: book_sync.lua:285 book_sync.lua:364 book_sync.lua:425 remote.lua:49
+msgid "Device not connected to network"
+msgstr "设备未连接到网络"
 
-msgid "Please try:\n1. Shorten the book filename\n2. Switch cloud naming to \"Use Book Title\"\nCurrent naming mode: %s"
-msgstr "请尝试：\n1. 缩短书籍文件名\n2. 切换云端命名方式为「使用书籍标题」\n当前命名方式：%s"
+#: book_sync.lua:291 book_sync.lua:370 book_sync.lua:485 book_sync.lua:594
+#: book_sync.lua:615 remote.lua:57 sync_log.lua:318
+msgid "Unsupported cloud storage type"
+msgstr "不支持的云服务类型"
 
-msgid "Use Book Title"
-msgstr "使用书籍标题"
+#: book_sync.lua:303 book_sync.lua:377 book_sync.lua:432
+msgid "Cannot build cloud path"
+msgstr "无法构建云端路径"
 
-msgid "Use Filename"
-msgstr "使用文件名"
+#: book_sync.lua:321 book_sync.lua:498
+msgid "Cloud storage authentication failed, please reconfigure"
+msgstr "云存储认证失败，请重新配置"
 
-msgid "Please check the log file"
-msgstr "请查看日志文件"
+#: book_sync.lua:325
+msgid "Upload failed (HTTP %s)"
+msgstr "上传失败 (HTTP %s)"
 
-msgid "Contact developer"
-msgstr "请联系开发者"
+#: book_sync.lua:337 main.lua:817
+msgid "Please set book download directory in settings first"
+msgstr "请先在设置中设置书籍下载目录"
 
-msgid "Cloud storage configured:\n%s"
-msgstr "云服务已设置:\n%s"
+#: book_sync.lua:346
+msgid "Cannot create download directory"
+msgstr "无法创建下载目录"
 
-# sync_log.lua
-msgid "No network connection, cannot sync"
-msgstr "无网络连接，无法同步"
+#: book_sync.lua:382
+msgid "Downloading: %s"
+msgstr "正在下载：%s"
 
-msgid "Syncing logs..."
-msgstr "正在同步记录..."
+#: book_sync.lua:398
+msgid "✓ Download successful: %s"
+msgstr "✓ 下载成功：%s"
 
-msgid "Sync successful! %d new records, %d total"
-msgstr "同步成功！新增 %d 条记录，共 %d 条"
+#: book_sync.lua:402 book_sync.lua:495
+msgid "Cloud file does not exist"
+msgstr "云端文件不存在"
 
-msgid "Sync failed, please check cloud storage configuration"
-msgstr "同步失败，请检查云存储配置"
+#: book_sync.lua:405 remote.lua:61
+msgid "Cloud storage authentication failed"
+msgstr "云存储认证失败"
 
-msgid "Cannot get cloud path"
-msgstr "无法获取云端路径"
+#: book_sync.lua:409
+msgid "Download failed (HTTP %s)"
+msgstr "下载失败 (HTTP %s)"
 
-msgid "Cannot create temporary file"
-msgstr "无法创建临时文件"
+#: book_sync.lua:491
+msgid "✓ Delete successful: %s"
+msgstr "✓ 删除成功：%s"
 
-msgid "Cloud sync logs cleared"
-msgstr "云端同步记录已清空"
+#: book_sync.lua:502
+msgid "Delete failed (HTTP %s)"
+msgstr "删除失败 (HTTP %s)"
 
-msgid "Clear failed, HTTP status: "
-msgstr "清空失败，HTTP状态码: "
+#: book_sync.lua:521
+msgid "Deleting books..."
+msgstr "正在删除书籍…"
 
-# update.lua
-msgid "Network request failed"
-msgstr "网络请求异常"
+#: book_sync.lua:522 book_sync.lua:1066 book_sync.lua:1174 manual_sync.lua:547
+msgid "%d book(s)"
+msgstr "%d 本书"
 
-msgid "No response from server"
-msgstr "服务器无响应"
+#: book_sync.lua:543
+msgid "Delete completed: %d success, %d failed"
+msgstr "删除完成：%d 成功，%d 失败"
 
-msgid "Failed to parse version information"
-msgstr "解析版本信息失败"
+#: book_sync.lua:551
+msgid "Delete failed details"
+msgstr "删除失败详情"
 
-msgid "Version number not found"
-msgstr "未找到版本号"
+#: book_sync.lua:589
+msgid "Cloud directory not set"
+msgstr "未设置云端目录"
 
-msgid "Download failed"
-msgstr "下载失败"
+#: book_sync.lua:606
+msgid "Dropbox API does not support listing folders"
+msgstr "Dropbox API 不支持列出文件夹"
 
-msgid "Downloaded file is invalid"
-msgstr "下载的文件无效"
+#: book_sync.lua:612
+msgid "WebDAV API does not support listing folders"
+msgstr "WebDAV API 不支持列出文件夹"
 
-msgid "Current version: %s (re-download)"
-msgstr "当前版本: %s (重新下载)"
+#: book_sync.lua:619
+msgid "Cannot get cloud file list"
+msgstr "无法获取云端文件列表"
 
-msgid "Downgrade to %s"
-msgstr "回退到 %s"
+#: book_sync.lua:642
+msgid "No network connection, cannot get cloud book list"
+msgstr "网络未连接，无法获取云端列表"
 
-msgid "Select version to download"
-msgstr "选择要下载的版本"
+#: book_sync.lua:649 book_sync.lua:1353 manual_sync.lua:70 manual_sync.lua:133
+#: manual_sync.lua:393
+msgid "Cloud storage service not configured, please configure in settings first"
+msgstr "未配置云存储服务，请先在设置中配置"
 
-msgid "No network connection, cannot check for updates"
-msgstr "无网络连接，无法检查更新"
+#: book_sync.lua:654 book_sync.lua:1361 manual_sync.lua:75 manual_sync.lua:138
+#: manual_sync.lua:398
+msgid "Cloud directory not set, please configure in cloud directory settings"
+msgstr "未设置云端目录，请先在云端目录中配置"
 
-msgid "Checking for updates..."
-msgstr "正在检查更新..."
+#: book_sync.lua:660 book_sync.lua:1370 manual_sync.lua:81 manual_sync.lua:144
+#: manual_sync.lua:404
+msgid "Unsupported cloud storage type, please use WebDAV or Dropbox"
+msgstr "不支持的云服务类型，请使用 WebDAV 或 Dropbox"
 
-msgid "Failed to check for updates, please try again later"
-msgstr "检查更新失败，请稍后重试"
+#: book_sync.lua:666
+msgid "No books found in cloud"
+msgstr "云端没有找到书籍文件"
 
-msgid "New version found: %s\nCurrent version: %s\n\nDownload and install update?"
-msgstr "发现新版本: %s\n当前版本: %s\n\n是否下载并安装更新？"
+#: book_sync.lua:746
+msgid "Search: \"%s\" (%d books found)"
+msgstr "搜索: \"%s\" (找到 %d 本书)"
 
-msgid "Release notes:"
-msgstr "更新内容:"
+#: book_sync.lua:799
+msgid "No books found"
+msgstr "没有找到匹配的书籍"
 
+#: book_sync.lua:811
+msgid "◀ Previous Page"
+msgstr "◀ 上一页"
 
-msgid "Current version is up to date (%s)\n\nDowngrade to a previous version?"
-msgstr "当前已是最新版本 (%s)\n\n是否需要回退到之前的版本？"
+#: book_sync.lua:818
+msgid "Page %d/%d (%d books)"
+msgstr "第 %d/%d 页 (%d 本)"
 
-msgid "Downgrade"
-msgstr "回退"
+#: book_sync.lua:823
+msgid "Next Page ▶"
+msgstr "下一页 ▶"
 
-msgid "Getting version list..."
-msgstr "正在获取版本列表..."
+#: book_sync.lua:842
+msgid "Select All"
+msgstr "全选"
 
-msgid "Failed to get version list"
-msgstr "获取版本列表失败"
+#: book_sync.lua:851
+msgid "Deselect All"
+msgstr "取消全选"
 
-msgid "Update package download URL not found"
-msgstr "未找到更新包下载地址"
+#: book_sync.lua:860 book_sync.lua:1024
+msgid "Search"
+msgstr "搜索"
 
-msgid "Downloading update"
-msgstr "正在下载更新"
+#: book_sync.lua:869
+msgid "Clear Search"
+msgstr "清除搜索"
 
-msgid "Download failed, please try again later"
-msgstr "下载失败，请稍后重试"
+#: book_sync.lua:876
+msgid "Delete (%d)"
+msgstr "删除 (%d)"
 
-msgid "Installing update"
-msgstr "正在安装更新"
+#: book_sync.lua:889
+msgid ""
+"Are you sure you want to delete %d book(s) from the cloud?\n"
+"This action cannot be undone!"
+msgstr ""
+"确定要删除云端的 %d 本书籍吗？\n"
+"此操作不可恢复！"
 
-msgid "Update installed successfully. KOReader needs to restart to apply changes. Restart now?"
-msgstr "更新安装完成，需要重启 KOReader 才能生效。是否立即重启？"
+#: book_sync.lua:890
+msgid "Delete"
+msgstr "删除"
 
-msgid "Restart"
-msgstr "重启"
+#: book_sync.lua:891 book_sync.lua:922 book_sync.lua:1017 book_sync.lua:1478
+#: main.lua:432 main.lua:445 main.lua:904 main.lua:1919 manual_sync.lua:93
+#: manual_sync.lua:154 manual_sync.lua:523 update.lua:512 update.lua:575
+#: update.lua:627
+msgid "Cancel"
+msgstr "取消"
 
-msgid "Automatic installation failed. Please manually extract %splugins/cloudlibrary.koplugin.zip to the plugins directory and restart"
-msgstr "自动安装失败，请手动解压 %splugins/cloudlibrary.koplugin.zip 到 plugins 目录后重启"
+#: book_sync.lua:898 book_sync.lua:917
+msgid "No books selected"
+msgstr "未选中任何书籍"
 
-msgid "Installation failed, please update manually"
-msgstr "安装失败，请手动更新"
+#: book_sync.lua:903
+msgid "Download (%d)"
+msgstr "下载 (%d)"
 
-msgid "README file not found"
-msgstr "未找到 README 文件"
+#: book_sync.lua:931
+msgid "Select books to download/delete (%d selected)"
+msgstr "请选择要下载/删除的书籍 (已选 %d 本)"
 
+#: book_sync.lua:1011
+msgid "Search books"
+msgstr "搜索书籍"
+
+#: book_sync.lua:1013
+msgid "Enter book title keyword"
+msgstr "输入书名关键字"
+
+#: book_sync.lua:1065
+msgid "Uploading books..."
+msgstr "正在上传书籍…"
+
+#: book_sync.lua:1084
+msgid "Upload completed: %d success, %d failed"
+msgstr "上传完成：%d 成功，%d 失败"
+
+#: book_sync.lua:1092
+msgid "Upload failed details"
+msgstr "上传失败详情"
+
+#: book_sync.lua:1106 book_sync.lua:1440
+msgid "Unknown"
+msgstr "未知"
+
+#: book_sync.lua:1154
+msgid "All books"
+msgstr "所有书籍"
+
+#: book_sync.lua:1155
+msgid "Download directory not set"
+msgstr "下载目录未设置"
+
+#: book_sync.lua:1158
+msgid "Download completed: 0 success, 1 failed, 0 skipped"
+msgstr "下载完成：0 成功，1 失败，0 跳过"
+
+#: book_sync.lua:1173
+msgid "Downloading books..."
+msgstr "正在下载书籍…"
+
+#: book_sync.lua:1191
+msgid "Download completed: %d success, %d failed, %d skipped"
+msgstr "下载完成：%d 成功，%d 失败，%d 跳过"
+
+#: book_sync.lua:1200
+msgid "Download failed details"
+msgstr "下载失败详情"
+
+#: book_sync.lua:1218 book_sync.lua:1250
+msgid "Local file with same name already exists"
+msgstr "本地已存在同名文件"
+
+#: book_sync.lua:1281
+msgid ""
+"Failure details:\n"
+"\n"
+msgstr ""
+"失败详情：\n"
+"\n"
+
+#: book_sync.lua:1295
+msgid "[Failure reason %d] %s\n"
+msgstr "[失败原因 %d] %s\n"
+
+#: book_sync.lua:1311
+msgid ""
+"Skipped details:\n"
+"\n"
+msgstr ""
+"跳过详情：\n"
+"\n"
+
+#: book_sync.lua:1312
+msgid ""
+"%d book(s) were skipped because local files with the same name already exist:\n"
+"\n"
+msgstr ""
+"共 %d 本书籍因本地已存在同名文件而被跳过：\n"
+"\n"
+
+#: book_sync.lua:1318
+msgid ""
+"\n"
+"Hint: To re-download, please delete or rename the local files first"
+msgstr ""
+"\n"
+"提示：如需重新下载，请先删除或重命名本地同名文件"
+
+#: book_sync.lua:1343
+msgid "No network connection, cannot upload"
+msgstr "网络未连接，无法上传"
+
+#: book_sync.lua:1377 manual_sync.lua:413 manual_sync.lua:515
+msgid "upload"
+msgstr "上传"
+
+#: book_sync.lua:1378 main.lua:636 main.lua:1165
+msgid "Batch upload selected books"
+msgstr "批量上传选中书籍"
+
+#: book_sync.lua:1401 book_sync.lua:1421 book_sync.lua:1430 manual_sync.lua:443
+#: manual_sync.lua:460 manual_sync.lua:469
+msgid "Please select books to %s, then tap \"%s\""
+msgstr "请选择要%s的书籍，然后点击\"%s\""
+
+#: book_sync.lua:1412 manual_sync.lua:453
+msgid "Unable to get file manager instance"
+msgstr "无法获取文件管理器实例"
+
+#: book_sync.lua:1467
+msgid "No valid book files selected"
+msgstr "没有选中任何有效的书籍文件"
+
+#: book_sync.lua:1476
+msgid "Upload %d book(s) to cloud"
+msgstr "将上传 %d 本书籍到云端"
+
+#: book_sync.lua:1477 manual_sync.lua:92 manual_sync.lua:153
+#: manual_sync.lua:522
+msgid "Continue"
+msgstr "继续"
+
+#: hooks.lua:143
+msgid "Auto update skipped (directory excluded)"
+msgstr "自动更新已跳过 (目录被排除)"
+
+#: hooks.lua:156
+msgid "Auto update failed (Network disconnected)"
+msgstr "自动更新失败 (网络未连接)"
+
+#: hooks.lua:169
+msgid "Auto update failed (Cloud storage not configured)"
+msgstr "自动更新失败 (未配置云存储)"
+
+#: hooks.lua:180
+msgid "Auto update failed (Cloud directory not set)"
+msgstr "自动更新失败 (未设置云端目录)"
+
+#: hooks.lua:192
+msgid "Auto update failed (Unsupported cloud service)"
+msgstr "自动更新失败 (不支持的云服务)"
+
+#: main.lua:131
+msgid "Settings"
+msgstr "设置"
+
+#: main.lua:136
+msgid "Metadata Sync"
+msgstr "元数据同步"
+
+#: main.lua:140
+msgid "Book Sync"
+msgstr "书籍同步"
+
+#: main.lua:144 main.lua:1130 main.lua:1183 main.lua:1563
+msgid "View Sync Log"
+msgstr "查看同步记录"
+
+#: main.lua:150 main.lua:1589
+msgid "Plugin Info"
+msgstr "插件说明"
+
+#: main.lua:156 main.lua:1602
 msgid "Updates"
 msgstr "检查更新"
 
+#: main.lua:156 main.lua:1602
+msgid "Current version"
+msgstr "当前版本"
+
+#: main.lua:167 main.lua:174
+msgid "Last sync: %1"
+msgstr "最后同步：%1"
+
+#: main.lua:172
+msgid ""
+"Last sync: %s\n"
+"(%s)"
+msgstr ""
+"上次同步：%s\n"
+"(%s)"
+
+#: main.lua:186
+msgid "Cloud Directory"
+msgstr "云端目录"
+
+#: main.lua:191
+msgid "Cloud Naming Rules"
+msgstr "云端命名规则"
+
+#: main.lua:199 main.lua:1338
+msgid "Book Download Directory: "
+msgstr "书籍下载目录："
+
+#: main.lua:201 main.lua:1340
+msgid "Set Book Download Directory"
+msgstr "设置书籍下载目录"
+
+#: main.lua:209 main.lua:1826
+msgid "Metadata Download Mode (Manual)"
+msgstr "元数据下载模式 (手动)"
+
+#: main.lua:219 main.lua:1791
+msgid "Metadata download mode (manual): Overwrite"
+msgstr "元数据下载模式 (手动)：覆盖更新"
+
+#: main.lua:230 main.lua:1805
+msgid "Metadata download mode (manual): Merge"
+msgstr "元数据下载模式 (手动)：合并更新"
+
+#: main.lua:236
+msgid "Auto Sync Settings (Metadata Only)"
+msgstr "自动同步设置 (仅元数据)"
+
+#: main.lua:241
+msgid "Additional JSON Backup"
+msgstr "额外备份 JSON 文件"
+
+#: main.lua:244
+msgid "Original format (default)"
+msgstr "保持原有格式 (默认)"
+
+#: main.lua:257
+msgid "Enabled: Original format"
+msgstr "已开启：原始格式"
+
+#: main.lua:257 main.lua:275
+msgid "Disabled: Additional JSON backup"
+msgstr "已关闭额外备份 JSON"
+
+#: main.lua:261
+msgid "NoteMarkData format"
+msgstr "使用 NoteMarkData 格式"
+
+#: main.lua:265
+msgid "When enabled: Convert annotations to NoteMarkData format"
+msgstr "开启后：将标注转换为 NoteMarkData 格式"
+
+#: main.lua:275
+msgid "Enabled: NoteMarkData format"
+msgstr "已开启：NoteMarkData 格式"
+
+#: main.lua:281 main.lua:1519
+msgid "Keep local document settings when overwriting"
+msgstr "覆盖更新时保留本地文档设置"
+
+#: main.lua:285
+msgid "When enabled: Keep local font, margin settings when overwriting, only sync annotations and progress"
+msgstr "开启后：覆盖更新时保留本地的字体、边距等设置，仅同步标注和进度"
+
+#: main.lua:290
+msgid "Enabled: Keep local document settings when overwriting"
+msgstr "已开启：覆盖更新时保留本地文档设置"
+
+#: main.lua:291
+msgid "Disabled: Fully use cloud file when overwriting"
+msgstr "已关闭：覆盖更新时完全使用云端文件"
+
+#: main.lua:295 main.lua:1532
+msgid "Enable Cloud Sync Log"
+msgstr "开启记录云同步"
+
+#: main.lua:299
+msgid "When enabled: Automatically upload local sync logs to cloud or merge cloud logs locally"
+msgstr "开启后：自动上传本地记录至云端或从云端合并同步记录至本地"
+
+#: main.lua:307
+msgid "Cloud sync log enabled"
+msgstr "已开启记录云同步"
+
+#: main.lua:309
+msgid "Cloud sync log disabled"
+msgstr "已关闭记录云同步"
+
+#: main.lua:314 main.lua:1576
+msgid "Clear Cloud Sync Log"
+msgstr "清空云端同步记录"
+
+#: main.lua:315
+msgid "Clear all sync logs stored in the cloud, local logs will not be affected"
+msgstr "清空云端存储的所有同步记录，不会影响本地记录"
+
+#: main.lua:331 main.lua:1244
+msgid "Metadata Cloud Directory: "
+msgstr "元数据云端目录："
+
+#: main.lua:333 main.lua:1246
+msgid "Set Metadata Cloud Directory"
+msgstr "设置元数据云端目录"
+
+#: main.lua:350 main.lua:1270
+msgid "Book Cloud Directory: "
+msgstr "书籍云端目录："
+
+#: main.lua:352 main.lua:1272
+msgid "Set Book Cloud Directory (defaults to metadata directory)"
+msgstr "设置书籍云端目录 (默认与元数据相同)"
+
+#: main.lua:395
+msgid "Select Directory to Exclude from Auto Sync"
+msgstr "选择要排除自动同步的目录"
+
+#: main.lua:401
+msgid "This directory is already in the exclude list"
+msgstr "该目录已在排除列表中"
+
+#: main.lua:408
+msgid "Excluded directory added: %s"
+msgstr "已添加排除目录：%s"
+
+#: main.lua:430
+msgid "Remove \"%s\" from exclude list?"
+msgstr "将\"%s\"从排除列表中移除？"
+
+#: main.lua:431 main.lua:679 main.lua:1892
+msgid "Remove"
+msgstr "移除"
+
+#: main.lua:443
+msgid ""
+"Are you sure you want to clear all sync logs from the cloud?\n"
+"\n"
+"This will not affect local logs, but other devices will not be able to sync cleared records."
+msgstr ""
+"确定要清空云端的同步记录吗？\n"
+"\n"
+"此操作不会影响本地的同步记录，但其他设备将无法同步到已清空的记录。"
+
+#: main.lua:444 main.lua:899 main.lua:903
+msgid "Clear"
+msgstr "清空"
+
+#: main.lua:457
+msgid "No network connection, cannot clear"
+msgstr "无网络连接，无法清空"
+
+#: main.lua:461
+msgid "Clearing cloud sync logs..."
+msgstr "正在清空云端同步记录…"
+
+#: main.lua:468 sync_log.lua:348
+msgid "Cloud sync logs cleared"
+msgstr "云端同步记录已清空"
+
+#: main.lua:470
+msgid "Clear failed: "
+msgstr "清空失败："
+
+#: main.lua:479 main.lua:1691
+msgid "Metadata Naming Rules"
+msgstr "元数据命名方式"
+
+#: main.lua:482 main.lua:520 main.lua:1290 main.lua:1313 main.lua:1637
+#: main.lua:1711 remote.lua:75
+msgid "Use Filename"
+msgstr "使用「文件名」"
+
+#: main.lua:488 main.lua:1642
+msgid "Metadata naming: Filename"
+msgstr "元数据命名方式为「文件名」"
+
+#: main.lua:493 main.lua:531 main.lua:1651 main.lua:1725
+msgid "Use Book Title (default)"
+msgstr "使用「书籍标题」(默认)"
+
+#: main.lua:499 main.lua:1656
+msgid "Metadata naming: Book title"
+msgstr "元数据命名方式为「书籍标题」"
+
+#: main.lua:504 main.lua:542 main.lua:1294 main.lua:1317 main.lua:1665
+#: main.lua:1739
+msgid "Use Title_Author"
+msgstr "使用「标题_作者」"
+
+#: main.lua:510 main.lua:1670
+msgid "Metadata naming: Title_Author"
+msgstr "元数据命名方式为「标题_作者」"
+
+#: main.lua:517 main.lua:1765
+msgid "Book Naming Rules"
+msgstr "书籍命名方式"
+
+#: main.lua:526 main.lua:1716
+msgid "Book naming: Filename"
+msgstr "书籍命名方式为「文件名」"
+
+#: main.lua:537 main.lua:1730
+msgid "Book naming: Book title"
+msgstr "书籍命名方式为「书籍标题」"
+
+#: main.lua:548 main.lua:1744
+msgid "Book naming: Title_Author"
+msgstr "书籍命名方式为「标题_作者」"
+
+#: main.lua:562
+msgid "Select Book Download Directory"
+msgstr "选择书籍下载目录"
+
+#: main.lua:568
+msgid "Book download directory set: %s"
+msgstr "本地下载目录已设置：%s"
+
+#: main.lua:579 main.lua:1107
+msgid "Upload current book metadata"
+msgstr "上传当前书籍元数据"
+
+#: main.lua:586
+msgid "Download current book metadata"
+msgstr "下载当前书籍元数据"
+
+#: main.lua:607 main.lua:1142
+msgid "Batch upload selected books metadata"
+msgstr "批量上传选中书籍元数据"
+
+#: main.lua:613
+msgid "Batch download selected books metadata"
+msgstr "批量下载选中书籍元数据"
+
+#: main.lua:642 main.lua:1174
+msgid "Batch download/delete cloud books"
+msgstr "批量下载/删除云端书籍"
+
+#: main.lua:658 main.lua:1856
+msgid "+ Add Directory to Exclude"
+msgstr "+ 添加排除目录"
+
+#: main.lua:691 main.lua:1873
+msgid "  (No directories excluded)"
+msgstr "   (暂无排除目录)"
+
+#: main.lua:703
+msgid "Auto Upload Backup"
+msgstr "自动上传备份"
+
+#: main.lua:707 main.lua:1372
+msgid "Auto upload when editing annotations"
+msgstr "编辑标注时自动上传"
+
+#: main.lua:714
+msgid "Enabled: Auto upload when editing annotations"
+msgstr "已开启：编辑标注时自动上传"
+
+#: main.lua:714
+msgid "Disabled: Auto upload when editing annotations"
+msgstr "已关闭：编辑标注时自动上传"
+
+#: main.lua:718 main.lua:1386
+msgid "Auto upload when closing book"
+msgstr "关闭书籍时自动上传"
+
+#: main.lua:725
+msgid "Enabled: Auto upload when closing book"
+msgstr "已开启：关闭书籍时自动上传"
+
+#: main.lua:725
+msgid "Disabled: Auto upload when closing book"
+msgstr "已关闭：关闭书籍时自动上传"
+
+#: main.lua:729 main.lua:1400
+msgid "Auto upload when device suspends"
+msgstr "设备休眠时自动上传"
+
+#: main.lua:736
+msgid "Enabled: Auto upload when device suspends"
+msgstr "已开启：休眠时自动上传"
+
+#: main.lua:736
+msgid "Disabled: Auto upload when device suspends"
+msgstr "已关闭：休眠时自动上传"
+
+#: main.lua:742
+msgid "Auto Download Update"
+msgstr "自动下载更新"
+
+#: main.lua:746 main.lua:1417
+msgid "Auto download when opening book (Overwrite)"
+msgstr "打开书籍时自动下载 (覆盖更新)"
+
+#: main.lua:761
+msgid "Enabled: Auto download when opening book (Overwrite)"
+msgstr "已开启：打开书籍时自动下载 (覆盖更新)"
+
+#: main.lua:761
+msgid "Disabled: Auto download when opening book (Overwrite)"
+msgstr "已关闭：打开书籍时自动下载 (覆盖更新)"
+
+#: main.lua:765 main.lua:1437
+msgid "Auto download when opening book (Merge)"
+msgstr "打开书籍时自动下载 (合并更新)"
+
+#: main.lua:780
+msgid "Enabled: Auto download when opening book (Merge)"
+msgstr "已开启：打开书籍时自动下载 (合并更新)"
+
+#: main.lua:780
+msgid "Disabled: Auto download when opening book (Merge)"
+msgstr "已关闭：打开书籍时自动下载 (合并更新)"
+
+#: main.lua:789 main.lua:1458
+msgid "Auto Sync Exclude Directories (%d)"
+msgstr "自动同步排除目录 (%d)"
+
+#: main.lua:791 main.lua:1459 main.lua:1931
+msgid "Auto Sync Exclude Directories"
+msgstr "自动同步排除目录"
+
+#: main.lua:800 main.lua:1549
+msgid "Show notification on auto sync"
+msgstr "自动同步时显示通知"
+
+#: main.lua:807
+msgid "Enabled: Auto sync notifications"
+msgstr "已开启：自动同步通知"
+
+#: main.lua:807
+msgid "Disabled: Auto sync notifications"
+msgstr "已关闭：自动同步通知"
+
+#: main.lua:854 main.lua:861
+msgid "No sync records"
+msgstr "没有同步记录"
+
+#: main.lua:865
+msgid ""
+"Sync log file path: %s\n"
+"\n"
+msgstr ""
+"同步记录文件路径：%s\n"
+"\n"
+
+#: main.lua:872
+msgid "Find"
+msgstr "查找"
+
+#: main.lua:880
+msgid "Copy"
+msgstr "复制"
+
+#: main.lua:884
+msgid "Sync log copied to clipboard"
+msgstr "同步记录已复制到剪贴板"
+
+#: main.lua:891
+msgid "Sync log saved to %s"
+msgstr "同步记录已保存到 %s"
+
+#: main.lua:893
+msgid "Copy failed"
+msgstr "复制失败"
+
+#: main.lua:902
+msgid "Are you sure you want to clear all sync records?"
+msgstr "确定要清空所有同步记录吗？"
+
+#: main.lua:914
+msgid "Sync records cleared"
+msgstr "同步记录已清空"
+
+#: main.lua:939
+msgid "Sync Log"
+msgstr "同步记录"
+
+#: main.lua:980
+msgid "README file not found"
+msgstr "未找到 README 文件"
+
+#: main.lua:985
+msgid "Cloud Library Plugin Info"
+msgstr "云端书库插件说明"
+
+#: main.lua:999 main.lua:1195
+msgid "Cloud Library - Quick Actions"
+msgstr "云端书库 — 快捷操作"
+
+#: main.lua:1006 main.lua:1615
+msgid "Cloud Library - Quick Settings"
+msgstr "云端书库 — 快捷设置"
+
+#: main.lua:1013
+msgid "Cloud Library - Worry-Free Sync Mode"
+msgstr "云端书库 — 元数据省心同步模式"
+
+#: main.lua:1020
+msgid "Cloud Library - Exclude Directories"
+msgstr "云端书库 — 自动同步排除目录"
+
+#: main.lua:1030
+msgid "Cloud Library - Upload current book metadata"
+msgstr "云端书库 — 上传当前书籍元数据"
+
+#: main.lua:1037
+msgid "Cloud Library - Download current book metadata (Smart mode)"
+msgstr "云端书库 — 下载当前书籍元数据 (智能模式)"
+
+#: main.lua:1047
+msgid "Cloud Library - Batch upload selected books metadata"
+msgstr "云端书库 — 批量上传选中书籍元数据"
+
+#: main.lua:1054
+msgid "Cloud Library - Batch download metadata (Smart mode)"
+msgstr "云端书库 — 批量下载元数据 (智能模式)"
+
+#: main.lua:1061
+msgid "Cloud Library - Batch upload selected books"
+msgstr "云端书库 — 批量上传选中书籍"
+
+#: main.lua:1068
+msgid "Cloud Library - Batch download/delete cloud books"
+msgstr "云端书库 — 批量下载/删除云端书籍"
+
+#: main.lua:1116
+msgid "Download current book metadata (%s)"
+msgstr "下载当前书籍元数据 (%s)"
+
+#: main.lua:1152
+msgid "Batch download selected books metadata (%s)"
+msgstr "批量下载选中书籍元数据 (%s)"
+
+#: main.lua:1292 main.lua:1315 remote.lua:75
+msgid "Use Book Title"
+msgstr "使用「书籍标题」"
+
+#: main.lua:1299
+msgid "Metadata Naming Rules: "
+msgstr "元数据命名方式："
+
+#: main.lua:1322
+msgid "Book Naming Rules: "
+msgstr "书籍命名方式："
+
+#: main.lua:1356
+msgid "Metadata Download Mode (Manual): "
+msgstr "元数据下载模式 (手动)："
+
+#: main.lua:1479
+msgid "Additional JSON Backup (Original format)"
+msgstr "额外备份 JSON 文件 (原有格式)"
+
+#: main.lua:1498
+msgid "Additional JSON Backup (NoteMarkData format)"
+msgstr "额外备份 JSON 文件 (NoteMarkData 格式)"
+
+#: main.lua:1680 main.lua:1754 main.lua:1815 main.lua:1909
+msgid "Back"
+msgstr "返回"
+
+#: main.lua:1976
+msgid "Cloud Library: All auto sync disabled"
+msgstr "云端书库：已关闭所有元数据自动同步"
+
+#: main.lua:1988
+msgid "Cloud Library: Worry-Free Sync Mode enabled (auto upload on close/suspend + auto download merge on open)"
+msgstr "云端书库：已开启元数据省心同步模式 (关闭书籍/设备休眠自动上传 + 打开书籍自动合并更新)"
+
+#: manual_sync.lua:48 manual_sync.lua:111
+msgid "Please open a book first"
+msgstr "请先打开一本书"
+
+#: manual_sync.lua:63 manual_sync.lua:126 manual_sync.lua:386 sync_log.lua:205
+msgid "No network connection, cannot sync"
+msgstr "网络未连接，无法同步"
+
+#: manual_sync.lua:90
+msgid "Confirm download"
+msgstr "确认下载"
+
+#: manual_sync.lua:91
+msgid "This operation requires reopening the current book to override update metadata. Continue?"
+msgstr "此操作需要重新打开当前书籍以覆盖更新元数据，是否继续？"
+
+#: manual_sync.lua:96
+msgid "Downloading and applying metadata - Overwrite..."
+msgstr "正在下载并应用元数据 — 覆盖更新…"
+
+#: manual_sync.lua:151
+msgid "Confirm merge download"
+msgstr "确认合并下载"
+
+#: manual_sync.lua:152
+msgid "This operation requires reopening the current book to merge update metadata. Continue?"
+msgstr "此操作需要重新打开当前书籍以合并更新元数据，是否继续？"
+
+#: manual_sync.lua:157
+msgid "Downloading and applying metadata - Merge..."
+msgstr "正在下载并应用元数据 — 合并更新…"
+
+#: manual_sync.lua:201
+msgid "✓ Upload successful"
+msgstr "✓ 上传成功"
+
+#: manual_sync.lua:205 manual_sync.lua:659
+msgid "Single upload"
+msgstr "单本上传"
+
+#: manual_sync.lua:205 manual_sync.lua:578 manual_sync.lua:659
+#: manual_sync.lua:703
+msgid "Overwrite cloud"
+msgstr "覆盖云端"
+
+#: manual_sync.lua:209
+msgid "✗ Upload failed: %s"
+msgstr "✗ 上传失败：%s"
+
+#: manual_sync.lua:229 manual_sync.lua:324
+msgid "✗ Download failed: %s"
+msgstr "✗ 下载失败：%s"
+
+#: manual_sync.lua:262 manual_sync.lua:348
+msgid "✗ Merge failed"
+msgstr "✗ 合并失败"
+
+#: manual_sync.lua:281
+msgid "✓ Applying successful (Overwrite)"
+msgstr "✓ 应用成功 (覆盖更新)"
+
+#: manual_sync.lua:286 manual_sync.lua:372 manual_sync.lua:661
+msgid "Single download"
+msgstr "单本下载"
+
+#: manual_sync.lua:367
+msgid "✓ Applying successful (Merge)"
+msgstr "✓ 应用成功 (合并更新)"
+
+#: manual_sync.lua:414
+msgid "Batch upload metadata"
+msgstr "批量上传元数据"
+
+#: manual_sync.lua:416
+msgid "download"
+msgstr "下载"
+
+#: manual_sync.lua:418
+msgid "Batch download metadata - Merge"
+msgstr "批量下载元数据 — 合并更新"
+
+#: manual_sync.lua:420
+msgid "Batch download metadata - Overwrite"
+msgstr "批量下载元数据 — 覆盖更新"
+
+#: manual_sync.lua:509
+msgid "No files selected"
+msgstr "没有选中任何文件"
+
+#: manual_sync.lua:517
+msgid "download-merge"
+msgstr "下载 — 合并更新"
+
+#: manual_sync.lua:517
+msgid "download-overwrite"
+msgstr "下载 — 覆盖更新"
+
+#: manual_sync.lua:521
+msgid "%s metadata for %d book(s)"
+msgstr "将%s %d 本书籍的元数据"
+
+#: manual_sync.lua:544
 msgid "Uploading metadata..."
-msgstr "正在上传元数据..."
+msgstr "正在上传元数据…"
 
+#: manual_sync.lua:544
 msgid "Downloading metadata..."
-msgstr "正在下载元数据..."
+msgstr "正在下载元数据…"
 
-msgid "0 / %d books completed"
-msgstr "0 / %d 本书籍完成"
+#: manual_sync.lua:565
+msgid "Metadata upload completed: %d success, %d failed"
+msgstr "元数据上传完成：%d 成功，%d 失败"
 
-msgid "%d / %d books completed"
-msgstr "%d / %d 本书籍完成"
+#: manual_sync.lua:568
+msgid "Metadata download completed (%s): %d success, %d failed"
+msgstr "元数据下载完成 %s：%d 成功，%d 失败"
 
-msgid "Uploading books..."
-msgstr "正在上传书籍..."
+#: manual_sync.lua:750
+msgid "Please check network and configuration"
+msgstr "请检查网络和配置"
 
-msgid "Downloading books..."
-msgstr "正在下载书籍..."
+#: manual_sync.lua:752
+msgid "Failed books:"
+msgstr "失败书籍："
 
-msgid "Deleting books..."
-msgstr "正在删除书籍..."
+#: remote.lua:50
+msgid "Please turn on Wi-Fi and try again"
+msgstr "请打开 Wi-Fi 后重试"
 
-# update.lua - 双源更新和版本回退相关
-msgid "Unable to connect to update server"
-msgstr "无法连接到更新服务器"
+#: remote.lua:54
+msgid "Please configure cloud storage in settings"
+msgstr "请在设置中配置云存储"
 
+#: remote.lua:58
+msgid "Please use WebDAV or Dropbox"
+msgstr "请使用 WebDAV 或 Dropbox"
+
+#: remote.lua:62
+msgid "Please check username/password"
+msgstr "请检查用户名/密码"
+
+#: remote.lua:69
+msgid "Metadata file not found in cloud"
+msgstr "云端未找到元数据文件"
+
+#: remote.lua:70
+msgid "Please upload the book first"
+msgstr "请先上传该书"
+
+#: remote.lua:73
+msgid "Cloud filename too long, upload failed"
+msgstr "云端文件名过长，上传失败"
+
+#: remote.lua:74
+msgid ""
+"Please try:\n"
+"1. Shorten the book filename\n"
+"2. Switch cloud naming to \"Use Book Title\"\n"
+"Current naming mode: %s"
+msgstr ""
+"请尝试:\n"
+"1. 缩短书籍文件名\n"
+"2. 将云端命名切换为\"使用书名\"\n"
+"当前命名模式: %s"
+
+#: remote.lua:79
+msgid "Please check the log file"
+msgstr "请查看日志文件"
+
+#: remote.lua:82
+msgid "Contact developer"
+msgstr "请联系开发者"
+
+#: remote.lua:195
+msgid ""
+"Cloud storage configured:\n"
+"%s"
+msgstr ""
+"云服务已设置：\n"
+"%s"
+
+#: remote.lua:447
+msgid "[%s] JSON format uploaded (NoteMarkData): %s\n"
+msgstr "[%s] JSON 格式已上传 (NoteMarkData)：%s\n"
+
+#: remote.lua:449
+msgid "[%s] JSON format uploaded: %s\n"
+msgstr "[%s] JSON 格式已上传：%s\n"
+
+#: sync_log.lua:161 sync_log.lua:173 sync_log.lua:184
+msgid "Sync time:"
+msgstr "同步时间："
+
+#: sync_log.lua:193 sync_log.lua:256 sync_log.lua:257
+msgid ""
+"Sync time: ([^\n"
+"]+)"
+msgstr ""
+"同步时间： ([^\n"
+"]+)"
+
+#: sync_log.lua:194
+msgid ""
+"Device ID: ([^\n"
+"]+)"
+msgstr ""
+"设备标识：([^\n"
+"]+)"
+
+#: sync_log.lua:214
+msgid "Syncing logs..."
+msgstr "正在同步记录…"
+
+#: sync_log.lua:273
+msgid "Sync successful! %d new records, %d total"
+msgstr "同步成功！新增 %d 条记录，共 %d 条"
+
+#: sync_log.lua:275
+msgid "Sync failed, please check cloud storage configuration"
+msgstr "同步失败，请检查云存储配置"
+
+#: sync_log.lua:323
+msgid "Cannot get cloud path"
+msgstr "无法获取云端路径"
+
+#: sync_log.lua:329
+msgid "Cannot create temporary file"
+msgstr "无法创建临时文件"
+
+#: sync_log.lua:350
+msgid "Clear failed, HTTP status: "
+msgstr "清空失败，HTTP 状态码："
+
+#: update.lua:160 update.lua:204 update.lua:216
 msgid "Failed to get version information"
 msgstr "获取版本信息失败"
 
-msgid "Download failed, please check your network"
-msgstr "下载失败，请检查网络"
-
-msgid "Download failed"
-msgstr "下载失败"
-
-msgid "Downloaded file is invalid"
-msgstr "下载的文件无效"
-
-msgid "Trying curl download... (15s timeout)"
-msgstr "正在尝试 curl 下载... (15秒超时)"
-
-msgid "curl failed, trying wget download... (15s timeout)"
-msgstr "curl 失败，正在尝试 wget 下载... (15秒超时)"
-
-msgid "wget failed, trying busybox wget download... (15s timeout)"
-msgstr "wget 失败，正在尝试 busybox wget 下载... (15秒超时)"
-
-msgid "Select update source"
-msgstr "选择更新源"
-
-msgid "GitHub"
-msgstr "GitHub"
-
-msgid "Gitee"
-msgstr "Gitee"
-
-msgid "GitHub (Latest)"
-msgstr "GitHub（最新版）"
-
-msgid "GitHub (Pre-release)"
-msgstr "GitHub（预发布版）"
-
-msgid "Gitee (Latest)"
-msgstr "Gitee（最新版）"
-
+#: update.lua:196
 msgid "No pre-release found"
 msgstr "未找到预发布版本"
 
-msgid "Applying changes - Overwrite..."
-msgstr "正在应用更改-覆盖更新..."
+#: update.lua:430 update.lua:432
+msgid "Downloaded file is invalid"
+msgstr "下载的文件无效"
 
-msgid "Applying changes - Merge..."
-msgstr "正在应用更改-合并更新..."
+#: update.lua:493
+msgid "Current version: %s (re-download)"
+msgstr "当前版本：%s (重新下载)"
 
-msgid "Downloading and applying metadata - Overwrite..."
-msgstr "正在下载并应用元数据-覆盖更新..."
+#: update.lua:493
+msgid "Downgrade to %s"
+msgstr "回退到 %s"
 
-msgid "Downloading and applying metadata - Merge..."
-msgstr "正在下载并应用元数据-合并更新..."
+#: update.lua:525
+msgid "Select version to download"
+msgstr "选择要下载的版本"
 
-msgid "✓ Applying successful (Overwrite)"
-msgstr "✓ 应用成功（覆盖更新）"
+#: update.lua:544
+msgid "GitHub (Latest)"
+msgstr "GitHub (最新版)"
 
-msgid "✓ Applying successful (Merge)"
-msgstr "✓ 应用成功（合并更新）"
+#: update.lua:554
+msgid "GitHub (Pre-release)"
+msgstr "GitHub (预发布版)"
 
-msgid "✗ Merge failed"
-msgstr "✗ 合并失败"
+#: update.lua:564
+msgid "Gitee (Latest)"
+msgstr "Gitee (最新版)"
+
+#: update.lua:584
+msgid "Select update source"
+msgstr "选择更新源"
+
+#: update.lua:595
+msgid "No network connection, cannot check for updates"
+msgstr "无网络连接，无法检查更新"
+
+#: update.lua:599
+msgid "Checking for updates..."
+msgstr "正在检查更新…"
+
+#: update.lua:605
+msgid "Check for updates failed"
+msgstr "检查更新失败"
+
+#: update.lua:613
+msgid ""
+"New version found: %s%s\n"
+"Current version: %s\n"
+"\n"
+"Download and install update?"
+msgstr ""
+"发现新版本：%s%s\n"
+"当前版本：%s\n"
+"\n"
+"是否下载并安装更新？"
+
+#: update.lua:617
+msgid "Update"
+msgstr "检查更新"
+
+#: update.lua:618 update.lua:695
+msgid "Later"
+msgstr "稍后"
+
+#: update.lua:625
+msgid ""
+"Current version is up to date (%s)\n"
+"\n"
+"Downgrade to a previous version?"
+msgstr ""
+"当前已是最新版本 (%s)\n"
+"\n"
+"是否需要回退到之前的版本？"
+
+#: update.lua:626
+msgid "Downgrade"
+msgstr "回退"
+
+#: update.lua:630
+msgid "Getting version list..."
+msgstr "正在获取版本列表…"
+
+#: update.lua:637
+msgid "Failed to get version list"
+msgstr "获取版本列表失败"
+
+#: update.lua:658
+msgid "Update package download URL not found"
+msgstr "未找到更新包下载地址"
+
+#: update.lua:668
+msgid "Downloading update"
+msgstr "正在下载更新"
+
+#: update.lua:677
+msgid "Download failed, please check network connection and try again"
+msgstr "下载失败，请检查网络连接后重试"
+
+#: update.lua:684
+msgid "Installing update"
+msgstr "正在安装更新"
+
+#: update.lua:693
+msgid "Update installed successfully. KOReader needs to restart to apply changes. Restart now?"
+msgstr "更新安装完成，需要重启 KOReader 才能生效，是否立即重启？"
+
+#: update.lua:694
+msgid "Restart"
+msgstr "重启"
+
+#: update.lua:709
+msgid "Automatic installation failed. Please manually extract %splugins/cloudlibrary.koplugin.zip to the plugins directory and restart"
+msgstr "自动安装失败，请手动解压 %splugins/cloudlibrary.koplugin.zip 到 plugins 目录后重启"
+
+#: update.lua:714
+msgid "Installation failed, please update manually"
+msgstr "安装失败，请手动更新"

@@ -519,7 +519,7 @@ function M.batch_delete_books(book_names, settings)
     local blitbuffer = require("ffi/blitbuffer")
     local progress_dialog = ProgressbarDialog:new{
         title = _("Deleting books..."),
-        subtitle = string.format("%d book(s)", total),
+        subtitle = string.format(_("%d book(s)"), total),
         progress = 0,
         progress_max = total,
         refresh_time_seconds = 0.1
@@ -1063,7 +1063,7 @@ function M.batchUploadBooks(selected_books, naming_mode, settings, plugin)
     local blitbuffer = require("ffi/blitbuffer")
     local progress_dialog = ProgressbarDialog:new{
         title = _("Uploading books..."),
-        subtitle = string.format("%d book(s)", total),
+        subtitle = string.format(_("%d book(s)"), total),
         progress = 0,
         progress_max = total,
         refresh_time_seconds = 0.1
@@ -1171,7 +1171,7 @@ function M.batchDownloadBooks(books, settings, plugin)
     local blitbuffer = require("ffi/blitbuffer")
     local progress_dialog = ProgressbarDialog:new{
         title = _("Downloading books..."),
-        subtitle = string.format("%d book(s)", #books),
+        subtitle = string.format(_("%d book(s)"), #books),
         progress = 0,
         progress_max = total_bytes,
         refresh_time_seconds = 0.1

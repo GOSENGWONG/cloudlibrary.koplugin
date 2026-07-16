@@ -544,7 +544,7 @@ function ManualSync:doBatchSync(is_upload, is_merge, selected_books)
     local title = is_upload and _("Uploading metadata...") or _("Downloading metadata...")
     local progress_dialog = ProgressbarDialog:new{
         title = title,
-        subtitle = string.format("%d book(s)", total),
+        subtitle = string.format(_("%d book(s)"), total),
         progress = 0,
         progress_max = total,
         refresh_time_seconds = 0.1
